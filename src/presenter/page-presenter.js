@@ -7,23 +7,24 @@ import NewListView from '../view/list-view.js';
 import NewFormView from '../view/form-creation-view.js';
 import { render } from '../render.js';
 
-const NUMBER_ROUTE_POINTS = 3;
-
 export default class PagePresenter {
   newListView = new NewListView();
-  init = (headContainer, filterContainer, sortingContainer) => {
+  init = (headContainer, filterContainer, sortingContainer, pointModel, offersModel, offers) => {
     this.headContainer = headContainer;
     this.filterContainer = filterContainer;
     this.sortingContainer = sortingContainer;
+    this.tasksModel = pointModel;
+    this.offersModel = offersModel;
+    this.allOffersModel = offers;
 
     render(new NewTripInfoView(), this.headContainer, 'afterbegin');
     render(new NewFiltersView(), this.filterContainer);
     render(new NewSortingView(), this.sortingContainer);
     render(this.newListView, this.sortingContainer);
-    render(new NewEditingFormView(), this.newListView.getElement());
-    render(new NewFormView(), this.newListView.getElement());
-    for (let i = 0; i < NUMBER_ROUTE_POINTS; i++) {
-      render(new NewItemView(), this.newListView.getElement());
+    render(new NewEditingFormView(this.tasksModel[0], this.allOffersModel), this.newListView.getElement());
+    render(new NewFormView(this.allOffersModel), this.newListView.getElement());
+    for (let i = 0; i < this.tasksModel.length; i++) {
+      render(new NewItemView(this.tasksModel[i], this.allOffersModel), this.newListView.getElement());
     }
   };
 }
