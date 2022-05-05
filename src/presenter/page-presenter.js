@@ -7,20 +7,22 @@ import NewListView from '../view/list-view.js';
 import NewFormView from '../view/form-creation-view.js';
 import { render } from '../render.js';
 
+const pageMainElement = document.querySelector('.page-body__page-main');
+const tripEventsElement = pageMainElement.querySelector('.trip-events');
+const tripMainElement = document.querySelector('.trip-main');
+const controlsFiltersElement = tripMainElement.querySelector('.trip-controls__filters');
+
 export default class PagePresenter {
   newListView = new NewListView();
-  init = (headContainer, filterContainer, sortingContainer, pointModel, offersModel, offers) => {
-    this.headContainer = headContainer;
-    this.filterContainer = filterContainer;
-    this.sortingContainer = sortingContainer;
+  init = (pointModel, offersModel, offers) => {
     this.tasksModel = pointModel;
     this.offersModel = offersModel;
     this.allOffersModel = offers;
 
-    render(new NewTripInfoView(), this.headContainer, 'afterbegin');
-    render(new NewFiltersView(), this.filterContainer);
-    render(new NewSortingView(), this.sortingContainer);
-    render(this.newListView, this.sortingContainer);
+    render(new NewTripInfoView(), tripMainElement, 'afterbegin');
+    render(new NewFiltersView(), controlsFiltersElement);
+    render(new NewSortingView(), tripEventsElement);
+    render(this.newListView, tripEventsElement);
     render(new NewEditingFormView(this.tasksModel[0], this.allOffersModel), this.newListView.getElement());
     render(new NewFormView(this.allOffersModel), this.newListView.getElement());
     for (let i = 0; i < this.tasksModel.length; i++) {
