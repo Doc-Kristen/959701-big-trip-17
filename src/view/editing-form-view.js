@@ -4,13 +4,16 @@ import { createFormTemplate } from './template/editing-form-template.js';
 // Форма редактирования
 
 export default class NewEditingFormView {
+  #task;
+  #offers;
+
   constructor(task, offers) {
-    this.task = task;
-    this.offers = offers;
+    this.#task = task;
+    this.#offers = offers;
   }
 
   getTemplate() {
-    return createFormTemplate(this.task, this.offers);
+    return createFormTemplate(this.#task, this.#offers);
   }
 
   getElement() {
