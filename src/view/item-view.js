@@ -4,8 +4,8 @@ import { createItemTemplate } from './template/item-template.js';
 // Элемент списка точек маршрута
 
 export default class NewItemView {
-  #task;
-  #offers;
+  #task = null;
+  #offers = null;
 
   constructor(task, offers) {
     this.#task = task;

@@ -4,7 +4,7 @@ import { createSortTemplate } from './template/sorting-template.js';
 // Сортировка
 
 export default class NewSortingView {
-  #element;
+  #element = null;
 
   getTemplate() {
     return createSortTemplate();

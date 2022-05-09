@@ -4,7 +4,7 @@ import { createFilterTemplate } from './template/filter-template.js';
 // Фильтры
 
 export default class NewFiltersView {
-  #element;
+  #element = null;
 
   getTemplate() {
     return createFilterTemplate();

@@ -4,7 +4,7 @@ import { createNewFormTemplate } from './template/form-creation-template.js';
 // Форма создания
 
 export default class NewFormView {
-  #element;
+  #element = null;
 
   getTemplate() {
     return createNewFormTemplate();

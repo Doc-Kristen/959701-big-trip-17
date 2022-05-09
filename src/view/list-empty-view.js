@@ -1,13 +1,13 @@
 import { createElement } from '../render.js';
-import { createListTemplate } from './template/list-template.js';
+import { createEmptyTemplate } from './template/list-empty.js';
 
 // Фильтры
 
-export default class NewListView {
+export default class NewEmptyView {
   #element = null;
 
   getTemplate() {
-    return createListTemplate();
+    return createEmptyTemplate();
   }
 
   get element() {

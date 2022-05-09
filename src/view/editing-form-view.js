@@ -4,9 +4,9 @@ import { createFormTemplate } from './template/editing-form-template.js';
 // Форма редактирования
 
 export default class NewEditingFormView {
-  #task;
-  #offers;
-  #element;
+  #task = null;
+  #offers = null;
+  #element = null;
 
   constructor(task, offers) {
     this.#task = task;
