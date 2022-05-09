@@ -4,7 +4,7 @@ import NewEditingFormView from '../view/editing-form-view.js';
 import NewTripInfoView from '../view/info-view.js';
 import NewItemView from '../view/item-view.js';
 import NewListView from '../view/list-view.js';
-import NewEmptyView from '../view/list-empty-view.js';
+// import NewEmptyView from '../view/list-empty-view.js';
 import { render } from '../render.js';
 
 const pageMainElement = document.querySelector('.page-body__page-main');
