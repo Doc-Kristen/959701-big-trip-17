@@ -6,6 +6,7 @@ import { createFormTemplate } from './template/editing-form-template.js';
 export default class NewEditingFormView {
   #task;
   #offers;
+  #element;
 
   constructor(task, offers) {
     this.#task = task;
@@ -16,15 +17,15 @@ export default class NewEditingFormView {
     return createFormTemplate(this.#task, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.getTemplate());
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

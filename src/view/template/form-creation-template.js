@@ -1,4 +1,4 @@
-// Форма создания
+// Форма создания точки
 
 const createNewFormTemplate = () => (
   ` <li class="trip-events__item">

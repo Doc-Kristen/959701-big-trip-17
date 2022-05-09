@@ -44,10 +44,10 @@ const getDifference = (date1, date2) => {
   return hours === 0 ? `${minutes}M` : `${hours}H ${minutes}M`;
 };
 
+// Поиск массива оффера по подходящему типу
+
 const findSelectedOffers = (selectedTypeOffer, allOffers) => {
   if (selectedTypeOffer === undefined) { return []; }
-  // Находит все офферы под подходящему типу из общего списка офферов
-  // Найден массив со всеми офферами
   const allOffersOfSelectedType = allOffers.find((offer) => offer.type === selectedTypeOffer).offers;
   return allOffersOfSelectedType;
 };

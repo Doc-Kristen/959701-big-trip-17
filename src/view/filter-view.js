@@ -5,11 +5,12 @@ import { createFilterTemplate } from './template/filter-template.js';
 
 export default class NewFiltersView {
   #element;
+
   getTemplate() {
     return createFilterTemplate();
   }
 
-  getElement() {
+  get element() {
     if (!this.#element) {
       this.#element = createElement(this.getTemplate());
     }

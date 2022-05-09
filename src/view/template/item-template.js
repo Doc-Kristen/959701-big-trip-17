@@ -71,4 +71,3 @@ const createItemTemplate = (point, allOffers) => {
 };
 
 export { createItemTemplate };
-
