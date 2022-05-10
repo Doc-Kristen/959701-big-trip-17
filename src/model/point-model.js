@@ -1,6 +1,6 @@
 import { generatePoint } from '../mock/trip-mock.js';
 
-const NUMBER_ROUTE_POINTS = 10;
+const NUMBER_ROUTE_POINTS = 15;
 
 export default class PointModel {
 

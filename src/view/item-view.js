@@ -1,14 +1,14 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createItemTemplate } from './template/item-template.js';
 
 // Элемент списка точек маршрута
 
-export default class NewItemView {
+export default class NewItemView extends AbstractView {
   #task = null;
   #offers = null;
-  #element;
 
   constructor(task, offers) {
+    super();
     this.#task = task;
     this.#offers = offers;
   }
@@ -17,17 +17,16 @@ export default class NewItemView {
     return createItemTemplate(this.#task, this.#offers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-    return this.#element;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 
-  removeElement() {
-    this.element = null;
-  }
 }
 
 

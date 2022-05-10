@@ -1,3 +1,4 @@
+import { render } from '../framework/render.js';
 import NewFiltersView from '../view/filter-view.js';
 import NewSortingView from '../view/sorting-view.js';
 import NewEditingFormView from '../view/editing-form-view.js';
@@ -5,17 +6,16 @@ import NewTripInfoView from '../view/info-view.js';
 import NewItemView from '../view/item-view.js';
 import NewListView from '../view/list-view.js';
 import NewEmptyView from '../view/list-empty-view.js';
-import NewFormView from '../view/form-creation-view.js';
-import { render } from '../render.js';
 
+const MIN_NUMBER_POINTS = 1;
 const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
 const controlsFiltersElement = tripMainElement.querySelector('.trip-controls__filters');
-const buttunNewEventElement = tripMainElement.querySelector('.trip-main__event-add-btn');
 
 export default class PagePresenter {
   #newListView = new NewListView();
+
   init = (pointModel, offers) => {
     this.tasksModel = pointModel;
     this.allOffersModel = offers;
@@ -24,9 +24,9 @@ export default class PagePresenter {
     render(new NewFiltersView(), controlsFiltersElement);
     render(new NewSortingView(), tripEventsElement);
     render(this.#newListView, tripEventsElement);
-    if (this.tasksModel.length < 1) {
+
+    if (this.tasksModel.length < MIN_NUMBER_POINTS) {
       render(new NewEmptyView(), tripEventsElement);
-      buttunNewEventElement.addEventListener('click', () => (render(new NewFormView(), this.#newListView.element)));
     } else {
       for (let i = 0; i < this.tasksModel.length; i++) {
         this.#renderTask(this.tasksModel[i], this.allOffersModel, this.#newListView.element);
@@ -54,17 +54,16 @@ export default class PagePresenter {
       }
     };
 
-    itemComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    itemComponent.setEditClickHandler(() => {
       replacePointToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    editEventComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    editEventComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
     });
 
-    editEventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    editEventComponent.setCloseClickHandler(() => {
       replaceFormToPoint();
     });
 

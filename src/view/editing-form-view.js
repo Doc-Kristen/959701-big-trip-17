@@ -1,14 +1,14 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createFormTemplate } from './template/editing-form-template.js';
 
 // Форма редактирования
 
-export default class NewEditingFormView {
+export default class NewEditingFormView extends AbstractView {
   #task = null;
   #offers = null;
-  #element = null;
 
   constructor(task, offers) {
+    super();
     this.#task = task;
     this.#offers = offers;
   }
@@ -17,15 +17,24 @@ export default class NewEditingFormView {
     return createFormTemplate(this.#task, this.#offers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
 
-    return this.#element;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setCloseClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
+
 }
