@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import NewFiltersView from '../view/filter-view.js';
 import NewSortingView from '../view/sorting-view.js';
 import NewEditingFormView from '../view/editing-form-view.js';
@@ -39,11 +39,11 @@ export default class PagePresenter {
     const editEventComponent = new NewEditingFormView(point, offers);
 
     const replacePointToForm = () => {
-      this.#newListView.element.replaceChild(editEventComponent.element, itemComponent.element);
+      replace(editEventComponent, itemComponent);
     };
 
     const replaceFormToPoint = () => {
-      this.#newListView.element.replaceChild(itemComponent.element, editEventComponent.element);
+      replace(itemComponent, editEventComponent);
     };
 
     const onEscKeyDown = (evt) => {
