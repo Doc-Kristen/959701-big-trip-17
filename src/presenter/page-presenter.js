@@ -39,11 +39,11 @@ export default class PagePresenter {
     const editEventComponent = new NewEditingFormView(point, offers);
 
     const replacePointToForm = () => {
-      this.#newListView.element.replaceChild(editEventComponent.element, itemComponent.getElement());
+      this.#newListView.element.replaceChild(editEventComponent.element, itemComponent.element);
     };
 
     const replaceFormToPoint = () => {
-      this.#newListView.element.replaceChild(itemComponent.getElement(), editEventComponent.element);
+      this.#newListView.element.replaceChild(itemComponent.element, editEventComponent.element);
     };
 
     const onEscKeyDown = (evt) => {
@@ -54,7 +54,7 @@ export default class PagePresenter {
       }
     };
 
-    itemComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    itemComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replacePointToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });

@@ -6,6 +6,7 @@ import { createItemTemplate } from './template/item-template.js';
 export default class NewItemView {
   #task = null;
   #offers = null;
+  #element;
 
   constructor(task, offers) {
     this.#task = task;
@@ -16,12 +17,12 @@ export default class NewItemView {
     return createItemTemplate(this.#task, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.template);
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
@@ -29,5 +30,4 @@ export default class NewItemView {
   }
 }
 
-// const NNN = new NewItemView();
-// console.log(NNN.getElement());
+
