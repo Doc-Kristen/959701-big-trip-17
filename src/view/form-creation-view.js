@@ -6,13 +6,13 @@ import { createNewFormTemplate } from './template/form-creation-template.js';
 export default class NewFormView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createNewFormTemplate();
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;

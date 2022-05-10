@@ -12,13 +12,13 @@ export default class NewItemView {
     this.#offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createItemTemplate(this.#task, this.#offers);
   }
 
   getElement() {
     if (!this.element) {
-      this.element = createElement(this.getTemplate());
+      this.element = createElement(this.template);
     }
 
     return this.element;
@@ -28,3 +28,6 @@ export default class NewItemView {
     this.element = null;
   }
 }
+
+// const NNN = new NewItemView();
+// console.log(NNN.getElement());

@@ -6,13 +6,13 @@ import { createFilterTemplate } from './template/filter-template.js';
 export default class NewFiltersView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createFilterTemplate();
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;
