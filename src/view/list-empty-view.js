@@ -6,15 +6,14 @@ import { createEmptyTemplate } from './template/list-empty.js';
 export default class NewEmptyView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createEmptyTemplate();
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
-
     return this.#element;
   }
 

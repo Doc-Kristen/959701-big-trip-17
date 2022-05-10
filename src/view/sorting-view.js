@@ -6,13 +6,13 @@ import { createSortTemplate } from './template/sorting-template.js';
 export default class NewSortingView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createSortTemplate();
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;

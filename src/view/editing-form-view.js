@@ -13,13 +13,13 @@ export default class NewEditingFormView {
     this.#offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createFormTemplate(this.#task, this.#offers);
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;

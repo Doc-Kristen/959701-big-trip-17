@@ -6,13 +6,13 @@ import { createListTemplate } from './template/list-template.js';
 export default class NewListView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createListTemplate();
   }
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;
