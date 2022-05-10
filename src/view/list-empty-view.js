@@ -1,20 +1,19 @@
 import { createElement } from '../render.js';
-import { createListTemplate } from './template/list-template.js';
+import { createEmptyTemplate } from './template/list-empty.js';
 
 // Фильтры
 
-export default class NewListView {
+export default class NewEmptyView {
   #element = null;
 
   get template() {
-    return createListTemplate();
+    return createEmptyTemplate();
   }
 
   get element() {
     if (!this.#element) {
       this.#element = createElement(this.template);
     }
-
     return this.#element;
   }
 

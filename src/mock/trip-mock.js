@@ -183,7 +183,7 @@ const findOffes = (typeOffer, ArrayOffers) => {
 
 const generatePoint = () => {
   const fishOffers = getFishOffers();
-  const typeOffer = types[getRandomInteger(0, types.length)];
+  const typeOffer = types[getRandomInteger(0, types.length - 1)];
   const findedAllOffes = findOffes(typeOffer, fishOffers);
   const startDate = getRandomInteger(minNumberForRandom, maxNumberForRandom);
   const endDate = startDate + getRandomInteger(minNumberForRandom, maxNumberForRandom);
@@ -203,4 +203,3 @@ const generatePoint = () => {
 };
 
 export { generatePoint, getFishOffers };
-

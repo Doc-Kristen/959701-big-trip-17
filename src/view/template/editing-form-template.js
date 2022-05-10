@@ -1,20 +1,23 @@
 import { findSelectedOffers } from '../../mock/util';
 
-// Здесь тоже непонятно, как отметить checked только у нужных
+const renderOffer = (type, offersList, currentPoint) => {
 
-const renderOffer = (offers = []) => {
-  let available = '';
-  for (const offer of offers) {
-    available += `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats"${'checked'}>
-    <label class="event__offer-label" for="event-offer-seats-1">
+  const currentOffers = findSelectedOffers(type, offersList);
+  return currentOffers.map((offer) => {
+
+    const checked = currentPoint.some((el) => el.id === offer.id) ? 'checked' : '';
+    const offerTitleArray = offer.title.split(' ');
+    const nameOfferForId = offerTitleArray[offerTitleArray.length - 1];
+
+    return `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${nameOfferForId}-1" type="checkbox" name="event-offer-luggage" ${checked}></input>
+    <label class="event__offer-label" for="event-offer-${nameOfferForId}-1">
       <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`;
-  }
-  return available;
+  }).join('');
 };
 
 const renderDescriptionDestination = (destination) => `<p class="event__destination-description">${destination.description}</p>`;
@@ -32,10 +35,10 @@ const createFormTemplate = (point, allOffers = []) => {
     dateFrom,
     dateTo,
     destination,
-    // offers = [],
+    offers = [],
     type
   } = point;
-  const allOffersOftype = findSelectedOffers(type, allOffers);
+
   return `<li class="trip-events__item">
        <form class="event event--edit" action="#" method="post">
          <header class="event__header">
@@ -122,7 +125,7 @@ const createFormTemplate = (point, allOffers = []) => {
            <section class="event__section  event__section--offers">
              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
              <div class="event__available-offers">
-             ${renderOffer(allOffersOftype)}
+             ${renderOffer(type, allOffers, offers)}
              </div>
            </section>
            <section class="event__section  event__section--destination">

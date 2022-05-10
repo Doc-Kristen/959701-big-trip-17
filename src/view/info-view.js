@@ -2,16 +2,18 @@ import {createElement} from '../render.js';
 import { createInfoTemplate } from './template/info-template.js';
 
 export default class NewTripInfoView {
-  getTemplate() {
+  #element = null;
+
+  get template() {
     return createInfoTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {

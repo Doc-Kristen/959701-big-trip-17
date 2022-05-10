@@ -1,18 +1,19 @@
 import { humanizeTaskDueDate, getDifference } from '../../mock/util.js';
 import { findSelectedOffers } from '../../mock/util.js';
 
-const renderSelectedOffers = (offers) => offers.map((offer) => {
-  const { title, price } = offer;
+const renderSelectedOffers = (type, offersList, offers) => {
 
-  return (
-    `<li class="event__offer">
-        <span class="event__offer-title">${title}</span>
-        &plus;
-        &euro;&nbsp;<span class="event__offer-price">${price}</span>
-      </li>`.trim()
-  );
-})
-  .join('\n');
+  const currentOffers = findSelectedOffers(type, offersList);
+  return currentOffers.map((offer) => {
+
+    const selectedOffer = offers.some((el) => el.id === offer.id) ? `<li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;
+    &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+  </li>`.trim() : '';
+    return selectedOffer;
+  }).join('');
+};
 
 const createItemTemplate = (point, allOffers) => {
   const {
@@ -21,7 +22,7 @@ const createItemTemplate = (point, allOffers) => {
     dateTo,
     destination,
     isFavorite = false,
-    // offers,
+    offers,
     type
   } = point;
   const dateStart = dateFrom !== null
@@ -33,11 +34,6 @@ const createItemTemplate = (point, allOffers) => {
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
     : '';
-
-  // Найдены все офферы для выбранного типа
-  // Не понятно, как отфильтровать среди полученного массива офферы с нужным id. Пока отрисовала все
-
-  const pointTypeOffer = findSelectedOffers(type, allOffers);
 
   return (`<li class="trip-events__item">
 <div class="event">
@@ -59,7 +55,7 @@ const createItemTemplate = (point, allOffers) => {
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
-  ${renderSelectedOffers(pointTypeOffer)}
+  ${renderSelectedOffers(type, allOffers, offers)}
   </ul>
   <button class="event__favorite-btn event__favorite-btn ${favoriteClassName}" type="button">
     <span class="visually-hidden">Add to favorite</span>
@@ -75,4 +71,3 @@ const createItemTemplate = (point, allOffers) => {
 };
 
 export { createItemTemplate };
-

@@ -7,4 +7,4 @@ const pagePresenter = new PagePresenter();
 const pointModel = new PointModel();
 const offerModel = new OfferModel();
 
-pagePresenter.init(pointModel.getTasks(), pointModel.getTasks(), offerModel.getOffers());
+pagePresenter.init(pointModel.task, offerModel.offers);

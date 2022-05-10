@@ -1,14 +1,12 @@
-import { generatePoint, getFishOffers } from '../mock/trip-mock.js';
+import { generatePoint } from '../mock/trip-mock.js';
 
-const NUMBER_ROUTE_POINTS = 15;
+const NUMBER_ROUTE_POINTS = 10;
 
 export default class PointModel {
 
-  offers = getFishOffers();
+  #tasks = Array.from({ length: NUMBER_ROUTE_POINTS }, generatePoint);
 
-  tasks = Array.from({ length: NUMBER_ROUTE_POINTS }, generatePoint);
-
-  getTasks = () => this.tasks.map((point) => ({
+  adaptData = () => this.#tasks.map((point) => ({
     basePrice: point['base_price'],
     dateFrom: point['date_from'],
     dateTo: point['date_to'],
@@ -19,5 +17,7 @@ export default class PointModel {
     type: point['type']
   }));
 
+  get task() {
+    return this.adaptData();
+  }
 }
-

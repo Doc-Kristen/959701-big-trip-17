@@ -4,24 +4,28 @@ import { createFormTemplate } from './template/editing-form-template.js';
 // Форма редактирования
 
 export default class NewEditingFormView {
+  #task = null;
+  #offers = null;
+  #element = null;
+
   constructor(task, offers) {
-    this.task = task;
-    this.offers = offers;
+    this.#task = task;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createFormTemplate(this.task, this.offers);
+  get template() {
+    return createFormTemplate(this.#task, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
