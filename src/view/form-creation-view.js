@@ -9,4 +9,23 @@ export default class NewFormView extends AbstractView {
     return createNewFormTemplate();
   }
 
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
+
+  setCloseClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }
