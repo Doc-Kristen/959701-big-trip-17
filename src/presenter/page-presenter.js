@@ -8,7 +8,6 @@ import NewEmptyView from '../view/list-empty-view.js';
 import NewFormView from '../view/form-creation-view.js';
 import { render } from '../render.js';
 
-const MIN_NUMBER_POINTS = 1;
 const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -25,13 +24,13 @@ export default class PagePresenter {
     render(new NewFiltersView(), controlsFiltersElement);
     render(new NewSortingView(), tripEventsElement);
     render(this.#newListView, tripEventsElement);
-    if (this.tasksModel.length < MIN_NUMBER_POINTS) {
-      render(new NewEmptyView(), tripEventsElement);
-      buttunNewEventElement.addEventListener('click', () => (render(new NewFormView(), this.#newListView.element)));
-    } else {
+    if (this.tasksModel.length > 0) {
       for (let i = 0; i < this.tasksModel.length; i++) {
         this.#renderTask(this.tasksModel[i], this.allOffersModel, this.#newListView.element);
       }
+    } else {
+      render(new NewEmptyView(), tripEventsElement);
+      buttunNewEventElement.addEventListener('click', () => (render(new NewFormView(), this.#newListView.element)));
     }
   };
 
