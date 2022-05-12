@@ -65,6 +65,7 @@ export default class PagePresenter {
 
     editEventComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     editEventComponent.setCloseClickHandler(() => {
