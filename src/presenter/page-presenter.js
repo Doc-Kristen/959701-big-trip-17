@@ -102,6 +102,7 @@ export default class PagePresenter {
     });
 
     newFormView.setFormSubmitHandler(() => {
+      // remove - временно, до дальнейшей работы с формой
       remove(newFormView);
       buttonNewEventElement.disabled = false;
       document.removeEventListener('keydown', onEscKeyDown);
