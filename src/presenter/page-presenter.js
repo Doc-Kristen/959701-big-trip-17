@@ -24,13 +24,13 @@ export default class PagePresenter {
     render(new NewFiltersView(), controlsFiltersElement);
     render(new NewSortingView(), tripEventsElement);
     render(this.#newListView, tripEventsElement);
-    if (this.tasksModel.length < 1) {
-      render(new NewEmptyView(), tripEventsElement);
-      buttunNewEventElement.addEventListener('click', () => (render(new NewFormView(), this.#newListView.element)));
-    } else {
+    if (this.tasksModel.length > 0) {
       for (let i = 0; i < this.tasksModel.length; i++) {
         this.#renderTask(this.tasksModel[i], this.allOffersModel, this.#newListView.element);
       }
+    } else {
+      render(new NewEmptyView(), tripEventsElement);
+      buttunNewEventElement.addEventListener('click', () => (render(new NewFormView(), this.#newListView.element)));
     }
   };
 
