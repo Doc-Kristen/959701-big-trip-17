@@ -69,6 +69,7 @@ export default class PagePresenter {
 
     editEventComponent.setCloseClickHandler(() => {
       replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     render(itemComponent, this.#newListView.element);
@@ -87,6 +88,8 @@ export default class PagePresenter {
       }
     };
 
+    render(newFormView, this.#newListView.element, 'afterbegin');
+
     buttonNewEventElement.disabled = true;
 
     document.addEventListener('keydown', onEscKeyDown);
@@ -102,8 +105,6 @@ export default class PagePresenter {
       buttonNewEventElement.disabled = false;
       document.removeEventListener('keydown', onEscKeyDown);
     });
-
-    render(newFormView, this.#newListView.element, 'afterbegin');
 
   };
 }
