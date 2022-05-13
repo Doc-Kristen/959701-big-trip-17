@@ -1,24 +1,31 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createNewFormTemplate } from './template/form-creation-template.js';
 
 // Форма создания
 
-export default class NewFormView {
-  #element = null;
+export default class NewFormView extends AbstractView {
 
   get template() {
     return createNewFormTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
 
-    return this.#element;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setCloseClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }

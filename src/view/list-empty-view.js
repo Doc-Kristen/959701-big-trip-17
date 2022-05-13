@@ -1,23 +1,12 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createEmptyTemplate } from './template/list-empty.js';
 
-// Фильтры
+// Сообщение при пустом списке точек
 
-export default class NewEmptyView {
-  #element = null;
+export default class NewEmptyView extends AbstractView {
 
   get template() {
     return createEmptyTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }

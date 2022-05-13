@@ -1,24 +1,12 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createListTemplate } from './template/list-template.js';
 
 // Фильтры
 
-export default class NewListView {
-  #element = null;
+export default class NewListView extends AbstractView {
 
   get template() {
     return createListTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
