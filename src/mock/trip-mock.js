@@ -1,8 +1,8 @@
 import { getRandomInteger, getRandomArrayPart, getArrayRandomElement } from './util';
 import { fishDescriptions, cities, types } from './const-mock';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
-const MAX_ID_POINT = 10;
 const minNumberForRandom = -7;
 const maxNumberForRandom = 7;
 
@@ -195,7 +195,7 @@ const generatePoint = () => {
     'date_from': dayjs().add(minNumber, 'day').toDate(),
     'date_to': dayjs().add(maxNumber, 'day').toDate(),
     'destination': generatetDestination(),
-    'id': getRandomInteger(0, MAX_ID_POINT),
+    'id': nanoid(),
     'is_favorite': Boolean(getRandomInteger(0, 1)),
     'offers': getRandomArrayPart(findedAllOffes),
     'type': typeOffer,

@@ -27,6 +27,15 @@ export default class NewItemView extends AbstractView {
     this._callback.editClick();
   };
 
+
+  setChooseFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#chooseFavoriteClickHandler);
+  };
+
+  #chooseFavoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  };
+
 }
-
-

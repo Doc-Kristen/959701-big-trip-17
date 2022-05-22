@@ -21,3 +21,4 @@ export default class PointModel {
     return this.adaptData();
   }
 }
+
