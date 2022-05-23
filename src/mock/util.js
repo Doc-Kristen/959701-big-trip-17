@@ -52,4 +52,20 @@ const findSelectedOffers = (selectedTypeOffer, allOffers) => {
   return allOffersOfSelectedType;
 };
 
-export { getRandomArrayPart, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifference, findSelectedOffers };
+// Функция для обновления данных
+
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export { getRandomArrayPart, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifference, findSelectedOffers, updateItem };
