@@ -1,5 +1,5 @@
-import { render, replace, remove } from '../framework/render';
-import NewEditingFormView from '../view/editing-form-view';
+import { render, replace, remove, RenderPosition } from '../framework/render';
+import NewFormView from '../view/form-creation-view';
 import NewItemView from '../view/item-view';
 
 const Mode = {
@@ -7,7 +7,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export default class EventPresenter {
+export default class FormEventPresenter {
   #point = null;
   #offers = null;
   #pointListContainer = null;
@@ -19,10 +19,10 @@ export default class EventPresenter {
 
   #mode = Mode.DEFAULT;
 
-  constructor(point, offers, taskListContainer, changeData, changeMode, destinations) {
+  constructor(point, offers, pointListContainer, changeData, changeMode, destinations) {
     this.#point = point;
     this.#offers = offers;
-    this.#pointListContainer = taskListContainer;
+    this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
     this.#destinations = destinations;
@@ -34,20 +34,20 @@ export default class EventPresenter {
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new NewItemView(this.#point, this.#offers);
-    this.#pointEditComponent = new NewEditingFormView(this.#point, this.#offers, this.#destinations);
+    this.#pointEditComponent = new NewFormView(this.#point, this.#offers, this.#destinations);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#pointEditComponent.setCloseClickHandler(this.resetView);
+    this.#pointEditComponent.setCloseClickHandler(this.#handleFormSubmit);
     this.#pointComponent.setChooseFavoriteClickHandler(() => this.#handleFavoriteClick());
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this.#pointComponent, this.#pointListContainer);
+      render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
       return;
     }
 
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointComponent, prevPointComponent);
+      replace(this.#pointEditComponent, prevPointComponent,);
     }
 
     if (this.#mode === Mode.EDITING) {
@@ -60,7 +60,7 @@ export default class EventPresenter {
   };
 
   destroy = () => {
-    remove(this.#pointComponent);
+    remove(this.this.#pointEditComponent);
     remove(this.#pointEditComponent);
   };
 
@@ -69,7 +69,8 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.resetView();
+      this.#pointEditComponent.reset(this.#point);
+      this.#replaceFormToCard();
     }
   };
 
@@ -101,4 +102,5 @@ export default class EventPresenter {
     this.#replaceFormToCard();
     // this.#changeData(this.#point);
   };
+
 }

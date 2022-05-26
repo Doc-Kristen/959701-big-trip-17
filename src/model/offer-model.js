@@ -6,4 +6,3 @@ export default class OfferModel {
     return this.#allOffer;
   }
 }
-

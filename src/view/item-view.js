@@ -4,17 +4,17 @@ import { createItemTemplate } from './template/item-template.js';
 // Элемент списка точек маршрута
 
 export default class NewItemView extends AbstractView {
-  #task = null;
+  #point = null;
   #offers = null;
 
-  constructor(task, offers) {
+  constructor(point, offers) {
     super();
-    this.#task = task;
+    this.#point = point;
     this.#offers = offers;
   }
 
   get template() {
-    return createItemTemplate(this.#task, this.#offers);
+    return createItemTemplate(this.#point, this.#offers);
   }
 
   setEditClickHandler = (callback) => {

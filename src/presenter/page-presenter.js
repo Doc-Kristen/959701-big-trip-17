@@ -7,7 +7,7 @@ import NewListView from '../view/list-view.js';
 import NewEmptyView from '../view/list-empty-view.js';
 import NewButtonCreateEventView from '../view/button-new-event-view.js';
 import EventPresenter from './event-presenter.js';
-import FormEventPresenter from './form-event-presenter.js';
+import FormEventPresenter from './new-event-presenter.js';
 
 const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
@@ -21,15 +21,16 @@ export default class PagePresenter {
   #newListView = new NewListView();
   #newButtonCreateEventView = new NewButtonCreateEventView();
   #newEmptyView = new NewEmptyView();
-  #tasksModel = null;
+  #pointModel = null;
   #newFormView = null;
 
   #taskPresenter = new Map();
 
-  init = (pointModel, offers) => {
-    this.#tasksModel = [...pointModel];
+  init = (pointModel, offers, destinations) => {
+    this.#pointModel = [...pointModel];
 
     this.allOffersModel = offers;
+    this.allDestinationsModel = destinations;
 
 
     this.#renderTripInfo();
@@ -37,12 +38,11 @@ export default class PagePresenter {
     this.#renderNewSorting();
     this.#renderList();
     this.#renderButtonCreateEvent();
-    this.#renderEvents(this.#tasksModel, this.allOffersModel, this.#newListView.element);
-
+    this.#renderEvents(this.#pointModel, this.allOffersModel, this.#newListView.element, this.allDestinationsModel);
   };
 
-  #renderFormEvent = () => {
-    this.#newFormView = new FormEventPresenter(this.#newListView.element, this.#newButtonCreateEventView.element);
+  #renderNewEvent = (events, offers, container, destinations) => {
+    this.#newFormView = new FormEventPresenter(events, offers, container, this.#handleTaskChange, this.#handleModeChange, destinations);
     this.#newFormView.init();
   };
 
@@ -50,17 +50,17 @@ export default class PagePresenter {
     render(this.#newEmptyView, tripEventsElement);
   };
 
-  #renderEvent = (events, offers, container) => {
-    const taskPresenter = new EventPresenter(events, offers, container, this.#handleTaskChange, this.#handleModeChange);
+  #renderEvent = (events, offers, container, destinations) => {
+    const taskPresenter = new EventPresenter(events, offers, container, this.#handleTaskChange, this.#handleModeChange, destinations);
     taskPresenter.init();
     this.#taskPresenter.set(events.id, taskPresenter);
   };
 
-  #renderEvents = (events, offers, container) => {
+  #renderEvents = (events, offers, container, destinations) => {
 
     if (events.length > 0) {
       for (let i = 0; i < events.length; i++) {
-        this.#renderEvent(events[i], offers, container);
+        this.#renderEvent(events[i], offers, container, destinations);
       }
     } else {
       this.#renderNoEventConponent();
@@ -69,7 +69,7 @@ export default class PagePresenter {
 
   #renderButtonCreateEvent = () => {
     render(this.#newButtonCreateEventView, tripMainElement);
-    this.#newButtonCreateEventView.setAddEventClickHandler(this.#renderFormEvent);
+    this.#newButtonCreateEventView.setAddEventClickHandler(()=> this.#renderNewEvent(this.#pointModel[0], this.allOffersModel, this.#newListView.element, this.allDestinationsModel));
   };
 
   #renderList = () => {
@@ -89,10 +89,10 @@ export default class PagePresenter {
   };
 
   #handleTaskChange = (updatedTask) => {
-    this.#tasksModel = updateItem(this.#tasksModel, updatedTask);
+    this.#pointModel = updateItem(this.#pointModel, updatedTask);
     this.#taskPresenter.get(updatedTask.id);
     this.#clearTaskList();
-    this.#renderEvents(this.#tasksModel, this.allOffersModel, this.#newListView.element);
+    this.#renderEvents(this.#pointModel, this.allOffersModel, this.#newListView.element);
   };
 
   #clearTaskList = () => {

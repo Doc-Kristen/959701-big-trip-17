@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { createListTemplate } from './template/list-template.js';
 
-// Фильтры
+// Список
 
 export default class NewListView extends AbstractView {
 
