@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 
 const minNumberForRandom = -7;
 const maxNumberForRandom = 7;
+const NUMBER_ROUTE_POINTS = 15;
 
 // Получить массив с офферами
 
@@ -153,7 +154,7 @@ const getFishOffers = () => ([
 // Генерация места и его описания
 
 const generatetDestination = () => ({
-  description: getRandomArrayPart(fishDescriptions),
+  description: String(getRandomArrayPart(fishDescriptions)),
   name: getArrayRandomElement(cities),
   pictures: [
     {
@@ -179,6 +180,8 @@ const findOffes = (typeOffer, ArrayOffers) => {
 
 };
 
+const allDestinations = Array.from({ length: NUMBER_ROUTE_POINTS }, generatetDestination);
+
 // Генерация точки маршрута
 
 const generatePoint = () => {
@@ -194,7 +197,7 @@ const generatePoint = () => {
     'base_price': getRandomInteger(),
     'date_from': dayjs().add(minNumber, 'day').toDate(),
     'date_to': dayjs().add(maxNumber, 'day').toDate(),
-    'destination': generatetDestination(),
+    'destination': allDestinations[getRandomInteger(0, allDestinations.length - 1)],
     'id': nanoid(),
     'is_favorite': Boolean(getRandomInteger(0, 1)),
     'offers': getRandomArrayPart(findedAllOffes),
@@ -202,4 +205,4 @@ const generatePoint = () => {
   };
 };
 
-export { generatePoint, getFishOffers };
+export { generatePoint, getFishOffers, generatetDestination, allDestinations };

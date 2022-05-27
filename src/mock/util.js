@@ -68,4 +68,8 @@ const updateItem = (items, update) => {
   ];
 };
 
-export { getRandomArrayPart, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifference, findSelectedOffers, updateItem };
+// Изменение формата даты
+
+const humanizePointDueDate = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
+
+export { getRandomArrayPart, humanizePointDueDate, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifference, findSelectedOffers, updateItem };
