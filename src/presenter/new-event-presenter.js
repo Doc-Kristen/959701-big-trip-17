@@ -100,7 +100,7 @@ export default class FormEventPresenter {
 
   #handleFormSubmit = () => {
     this.#replaceFormToCard();
-    // this.#changeData(this.#point);
+    this.#changeData(this.#point);
   };
 
 }

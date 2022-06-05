@@ -1,8 +1,9 @@
 import { generatePoint } from '../mock/trip-mock.js';
+import Observable from '../framework/observable.js';
 
 const NUMBER_ROUTE_POINTS = 15;
 
-export default class PointModel {
+export default class PointModel extends Observable {
 
   #tasks = Array.from({ length: NUMBER_ROUTE_POINTS }, generatePoint);
 

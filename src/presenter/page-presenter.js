@@ -1,5 +1,6 @@
 import { render, RenderPosition } from '../framework/render.js';
 import { updateItem } from '../mock/util.js';
+import { generateFilter } from '../mock/trip-mock.js';
 import NewFiltersView from '../view/filter-view.js';
 import NewSortingView from '../view/sorting-view.js';
 import NewTripInfoView from '../view/info-view.js';
@@ -13,10 +14,10 @@ const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
 const controlsFiltersElement = tripMainElement.querySelector('.trip-controls__filters');
-
+const filter = generateFilter();
 export default class PagePresenter {
   #newTripInfoView = new NewTripInfoView();
-  #newFiltersView = new NewFiltersView();
+  #newFiltersView = new NewFiltersView(filter);
   #newSortingView = new NewSortingView();
   #newListView = new NewListView();
   #newButtonCreateEventView = new NewButtonCreateEventView();
@@ -25,6 +26,10 @@ export default class PagePresenter {
   #newFormView = null;
 
   #taskPresenter = new Map();
+
+  get tasks() {
+    return this.#pointModel.tasks;
+  }
 
   init = (pointModel, offers, destinations) => {
     this.#pointModel = [...pointModel];
@@ -89,10 +94,11 @@ export default class PagePresenter {
   };
 
   #handleTaskChange = (updatedTask) => {
+
     this.#pointModel = updateItem(this.#pointModel, updatedTask);
     this.#taskPresenter.get(updatedTask.id);
     this.#clearTaskList();
-    this.#renderEvents(this.#pointModel, this.allOffersModel, this.#newListView.element);
+    this.#renderEvents(this.#pointModel, this.allOffersModel, this.#newListView.element, this.allDestinationsModel);
   };
 
   #clearTaskList = () => {
@@ -103,5 +109,4 @@ export default class PagePresenter {
   #handleModeChange = () => {
     this.#taskPresenter.forEach((presenter) => presenter.resetView());
   };
-
 }

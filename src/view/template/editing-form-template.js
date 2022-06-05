@@ -47,7 +47,9 @@ const renderOffers = (checkedType, allOffers, checkedOffers) => {
 
   return pointTypeOffer.offers.map((offer) => {
     const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
-
+console.log(checkedOffers);
+console.log(offer.id);
+console.log(checked);
     return `<div class='event__offer-selector'>
       <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked}>
       <label class='event__offer-label' for='event-offer-luggage-${offer.id}'>

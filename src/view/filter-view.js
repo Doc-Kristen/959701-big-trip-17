@@ -5,8 +5,14 @@ import { createFilterTemplate } from './template/filter-template.js';
 
 export default class NewFiltersView extends AbstractView {
 
-  get template() {
-    return createFilterTemplate();
+  #filters = null;
+
+  constructor(filters) {
+    super();
+    this.#filters = filters;
   }
 
+  get template() {
+    return createFilterTemplate(this.#filters);
+  }
 }

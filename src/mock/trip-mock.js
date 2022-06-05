@@ -2,6 +2,7 @@ import { getRandomInteger, getRandomArrayPart, getArrayRandomElement } from './u
 import { fishDescriptions, cities, types } from './const-mock';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import { FilterType } from './const-mock';
 
 const minNumberForRandom = -7;
 const maxNumberForRandom = 7;
@@ -205,4 +206,10 @@ const generatePoint = () => {
   };
 };
 
-export { generatePoint, getFishOffers, generatetDestination, allDestinations };
+const generateFilter = () => Object.values(FilterType).map(
+  (filterName) => ({
+    name: filterName,
+  }),
+);
+
+export { generatePoint, getFishOffers, generatetDestination, allDestinations, generateFilter };

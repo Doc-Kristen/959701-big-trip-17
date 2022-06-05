@@ -99,6 +99,6 @@ export default class EventPresenter {
 
   #handleFormSubmit = () => {
     this.#replaceFormToCard();
-    // this.#changeData(this.#point);
+    this.#changeData(this.#point);
   };
 }

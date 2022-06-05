@@ -1,20 +1,27 @@
-const createFilterTemplate = () => (`<form class="trip-filters" action="#" method="get">
-<div class="trip-filters__filter">
-  <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-  <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-</div>
+const createFilterItemTemplate = (filterName, isChecked, isDisabled) => (
+  `<div class="trip-filters__filter">
+      <input
+        id="filter__${filterName.name}"
+        class="trip-filters__filter-input  visually-hidden"
+        type="radio"
+        name="trip-filter"
+        value="everything"
+        ${isChecked ? 'checked' : ''}
+        ${isDisabled && !isChecked ? 'disabled' : ''}
+      />
+      <label class="trip-filters__filter-label" for="filter-${filterName.name}">${filterName.name}</label>
+    </div>`
+);
 
-<div class="trip-filters__filter">
-  <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-  <label class="trip-filters__filter-label" for="filter-future">Future</label>
-</div>
+const createFilterTemplate = (filterItems) => {
+  const itemsFilterTemplate = filterItems
+    .map((filter, index) => createFilterItemTemplate(filter, index === 0, index !== 0))
+    .join('');
 
-<div class="trip-filters__filter">
-  <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-  <label class="trip-filters__filter-label" for="filter-past">Past</label>
-</div>
-
-<button class="visually-hidden" type="submit">Accept filter</button>
-</form>`);
+  return `<form class="trip-filters" action="#" method="get">
+    ${itemsFilterTemplate}
+    <button class="visually-hidden" type="submit">Accept filter</button>
+  </form>`;
+};
 
 export { createFilterTemplate };
