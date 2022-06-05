@@ -3,10 +3,31 @@ import { createFilterTemplate } from './template/filter-template.js';
 
 // Фильтры
 
-export default class NewFiltersView extends AbstractView {
+export default class FiltersView extends AbstractView {
+  #filters = null;
+  #currentFilter = null;
 
-  get template() {
-    return createFilterTemplate();
+  constructor(filters, currentFilterType) {
+    super();
+    this.#filters = filters;
+    this.#currentFilter = currentFilterType;
   }
 
+  get template() {
+    return createFilterTemplate(this.#filters, this.#currentFilter);
+  }
+
+  setFilterTypeChangeHandler = (callback) => {
+    this._callback.filterTypeChange = callback;
+    this.element.addEventListener('click', this.#filterTypeChangeHandler);
+  };
+
+  #filterTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (!evt.target.classList.contains('trip-filters__filter-label')) {
+      return;
+    }
+    this._callback.filterTypeChange(evt.target.parentNode.querySelector('.trip-filters__filter-input').value);
+  };
 }
+

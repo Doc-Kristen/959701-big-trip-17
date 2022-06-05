@@ -6,7 +6,7 @@ const renderSelectedOffers = (type, offersList, offers) => {
   const currentOffers = findSelectedOffers(type, offersList);
   return currentOffers.map((offer) => {
 
-    const selectedOffer = offers.some((el) => el.id === offer.id) ? `<li class="event__offer">
+    const selectedOffer = offers.includes(offer.id) ? `<li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;
     &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>

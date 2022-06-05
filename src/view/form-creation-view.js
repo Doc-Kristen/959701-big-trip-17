@@ -4,14 +4,13 @@ import { createNewFormTemplate } from './template/form-creation-template.js';
 // Форма создания точки маршрута
 
 export default class NewFormView extends AbstractStatefulView {
-  #point = null;
+
   #allOffers = null;
   #allDestinations = null;
 
   constructor(point, allOffers, allDestinations) {
     super();
-    this.#point = point;
-    this._state = NewFormView.parsePointToState(this.#point);
+    this._state = NewFormView.parsePointToState(point);
 
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
@@ -32,7 +31,6 @@ export default class NewFormView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setCloseClickHandler(this._callback.editClick);
   };
 
   #pointTypeClickHandler = (evt) => {
@@ -48,9 +46,14 @@ export default class NewFormView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      checkedDestination: { name: evt.target.value }
-    });
+    if (this.#allDestinations.some((destination) => destination.name === evt.target.value)) {
+      const selectedDestination = this.#allDestinations.find((destination) => destination.name === evt.target.value);
+      // Потом еще раз перепроверить
+      this.updateElement({
+        name: evt.target.value,
+        checkedDestination: selectedDestination,
+      });
+    }
   };
 
   #offersToggleHandler = (evt) => {
@@ -69,7 +72,7 @@ export default class NewFormView extends AbstractStatefulView {
 
   #basePriceInputHandler = (evt) => {
     evt.preventDefault();
-    const reg = /^(?:[1-9]\d*|\d)$/;
+    const reg = /^[1-9]\d*$/;
     this._setState({
       newPrice: reg.test(evt.target.value) ? evt.target.value : '',
     });
@@ -82,18 +85,9 @@ export default class NewFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(NewFormView.parseStateToPoint(this._state));
-  };
-
-  setCloseClickHandler = (callback) => {
-    this._callback.editClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeClickHandler);
-  };
-
-  #closeClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.editClick(NewFormView.parseStateToPoint(this._state));
-
+    if (this.#allDestinations.some((destination) => destination.name === this.element.querySelector('.event__input--destination').value)) {
+      this._callback.formSubmit(NewFormView.parseStateToPoint(this._state));
+    }
   };
 
   setDeleteClickHandler = (callback) => {
@@ -146,5 +140,4 @@ export default class NewFormView extends AbstractStatefulView {
 
     return point;
   };
-
 }
