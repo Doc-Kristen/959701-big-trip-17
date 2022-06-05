@@ -4,14 +4,14 @@ import { createFormTemplate } from './template/editing-form-template.js';
 // Форма редактирования точки маршрута
 
 export default class NewEditingFormView extends AbstractStatefulView {
-  #point = null;
+
   #allOffers = null;
   #allDestinations = null;
 
   constructor(point, allOffers, allDestinations) {
     super();
-    this.#point = point;
-    this._state = NewEditingFormView.parsePointToState(this.#point);
+
+    this._state = NewEditingFormView.parsePointToState(point);
 
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
@@ -33,6 +33,7 @@ export default class NewEditingFormView extends AbstractStatefulView {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setCloseClickHandler(this._callback.editClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   #pointTypeClickHandler = (evt) => {
@@ -48,9 +49,14 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      checkedDestination: { name: evt.target.value }
-    });
+
+    if (this.#allDestinations.find((destination) => destination.name === evt.target.value)) {
+      const selectedDestination = this.#allDestinations.find((destination) => destination.name === evt.target.value);
+      // Потом еще раз перепроверить
+      this.updateElement({
+        checkedDestination: selectedDestination,
+      });
+    }
   };
 
   #offersToggleHandler = (evt) => {
@@ -69,7 +75,7 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #basePriceInputHandler = (evt) => {
     evt.preventDefault();
-    const reg = /^(?:[1-9]\d*|\d)$/;
+    const reg = /^[1-9]\d*$/;
     this._setState({
       newPrice: reg.test(evt.target.value) ? evt.target.value : '',
     });
@@ -97,13 +103,13 @@ export default class NewEditingFormView extends AbstractStatefulView {
   };
 
   setDeleteClickHandler = (callback) => {
-    this._callback.editClick = callback;
+    this._callback.deleteClick = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.deleteClick(NewEditingFormView.parseStateToPoint(this._state));
   };
 
   #setInnerHandlers = () => {

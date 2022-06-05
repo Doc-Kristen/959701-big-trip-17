@@ -1,3 +1,4 @@
+import he from 'he';
 import { humanizePointDueDate } from '../../mock/util';
 import { PointType } from '../../mock/const-mock';
 
@@ -26,7 +27,7 @@ const createPointTypesTemplate = (checkedType) => (
   </div>`
 );
 
-const renderSelectedDestinations = (allDestinations) => allDestinations.map((destination) => (
+const getDestinationNameList = (allDestinations) => allDestinations.map((destination) => (
   `<option value=${destination.name}></option>`
 )).join('');
 
@@ -35,9 +36,9 @@ const createDestinationsTemplate = (type, destination, allDestinations) => (
     <label class='event__label  event__type-output' for='event-destination-1'>
       ${type}
     </label>
-    <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value=${destination.name} list='destination-list-1'>
+    <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value=${he.encode(destination.name)} list='destination-list-1' autocomplete='off' required>
     <datalist id='destination-list-1'>
-      ${renderSelectedDestinations(allDestinations)}
+      ${getDestinationNameList(allDestinations)}
     </datalist>
   </div>`
 );
@@ -47,9 +48,6 @@ const renderOffers = (checkedType, allOffers, checkedOffers) => {
 
   return pointTypeOffer.offers.map((offer) => {
     const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
-console.log(checkedOffers);
-console.log(offer.id);
-console.log(checked);
     return `<div class='event__offer-selector'>
       <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-${offer.id}' type='checkbox' name='event-offer-luggage' data-offer-id=${offer.id} ${checked}>
       <label class='event__offer-label' for='event-offer-luggage-${offer.id}'>
@@ -97,8 +95,7 @@ const createDestinationTemplate = (allDestinations, checkedDestination) => {
 };
 
 const createFormTemplate = (data, allOffers, allDestinations) => {
-
-  const {dateFrom, dateTo, checkedType, checkedDestination, checkedOffers, newPrice} = data;
+  const { dateFrom, dateTo, checkedType, checkedDestination, checkedOffers, newPrice } = data;
   const typesTemplate = createPointTypesTemplate(checkedType);
   const destinationsTemplate = createDestinationsTemplate(checkedType, checkedDestination, allDestinations);
   const offersTemplate = createOffersTemplate(checkedType, allOffers, checkedOffers);
@@ -111,7 +108,7 @@ const createFormTemplate = (data, allOffers, allDestinations) => {
     ? humanizePointDueDate(dateTo)
     : '';
 
-  return  (
+  return (
     `<li class='trip-events__item'>
       <form class='event event--edit' action='#' method='post'>
         <header class='event__header'>
@@ -129,10 +126,10 @@ const createFormTemplate = (data, allOffers, allDestinations) => {
               <span class='visually-hidden'>Price</span>
               &euro;
             </label>
-            <input class='event__input  event__input--price' id='event-price-1' type='text' name='event-price' value='${newPrice}'>
+            <input class='event__input  event__input--price' id='event-price-1' type='number' name='event-price' value='${newPrice}' required>
           </div>
           <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
-          ${data ? '<button class="event__reset-btn" type="reset">Delete</button>' : '<button class="event__reset-btn" type="reset">Cancel</button>'}
+          <button class="event__reset-btn" type="reset">Delete</button>'
           <button class='event__rollup-btn' type='button'>
             <span class='visually-hidden'>Open event</span>
           </button>

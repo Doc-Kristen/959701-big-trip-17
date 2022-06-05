@@ -28,20 +28,22 @@ const getRandomArrayPart = (arr) => {
   return arr.slice(lower, upper);
 };
 
-const humanizeTaskDueDate = (dueDate) => {
-  if (dueDate === null) {
-    return '';
-  }
-  return dayjs(dueDate).format('D MMMM');
-};
-
 // Расчет времени между датами
 
-const getDifference = (date1, date2) => {
-  const totalMinutes = Math.abs(dayjs(date1).diff(dayjs(date2), 'm'));
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = hours % 60;
-  return hours === 0 ? `${minutes}M` : `${hours}H ${minutes}M`;
+const getDifferenceTime = (date1, date2) => {
+  let differenceTime = '';
+  const difference = (new Date(date2)) - (new Date(date1));
+  const day = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hour = Math.floor((difference / 1000 / 60 / 60) % 24);
+  const min = Math.floor((difference / 1000 / 60) % 60);
+  if (difference < 3600000) {
+    differenceTime = `${min}M`;
+  } else if (difference >= 3600000 && difference < 86400000) {
+    differenceTime = `${hour}H ${min}M`;
+  } else {
+    differenceTime = `${day}D ${hour}H`;
+  }
+  return differenceTime;
 };
 
 // Поиск массива оффера по подходящему типу
@@ -52,24 +54,33 @@ const findSelectedOffers = (selectedTypeOffer, allOffers) => {
   return allOffersOfSelectedType;
 };
 
-// Функция для обновления данных
-
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
-
 // Изменение формата даты
 
 const humanizePointDueDate = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
 
-export { getRandomArrayPart, humanizePointDueDate, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifference, findSelectedOffers, updateItem };
+const humanizeTaskDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('D MMMM') : '';
+
+const isTaskExpired = (dueDate) => dueDate && dayjs().isAfter(dueDate, 'D');
+
+const isTaskRepeating = (repeating) => Object.values(repeating).some(Boolean);
+
+const isTaskExpiringToday = (dueDate) => dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+
+const getWeightForStartDate = (dateA, dateB) => dateA - dateB;
+
+const getWeightForTimeDown = (timeA, timeB) => timeB - timeA;
+
+const getWeightForPriceDown = (priceA, priceB) => priceB - priceA;
+
+const sortTimeDown = (pointA, pointB) => {
+  const durationTimePointA = dayjs(pointA.dateTo).diff(pointA.dateFrom);
+  const durationTimePointB = dayjs(pointB.dateTo).diff(pointB.dateFrom);
+
+  return getWeightForTimeDown(durationTimePointA, durationTimePointB);
+};
+
+const sortDayUp = (pointA, pointB) => getWeightForStartDate(dayjs(pointA.dateFrom), dayjs(pointB.dateFrom));
+
+const sortPriceDown = (pointA, pointB) => getWeightForPriceDown(pointA.basePrice, pointB.basePrice);
+
+export { getRandomArrayPart, humanizePointDueDate, getArrayRandomElement, humanizeTaskDueDate, getRandomInteger, getDifferenceTime as getDifference, findSelectedOffers, isTaskExpired, isTaskRepeating, isTaskExpiringToday, sortDayUp, sortTimeDown, sortPriceDown };

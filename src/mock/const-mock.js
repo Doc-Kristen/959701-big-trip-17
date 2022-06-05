@@ -44,11 +44,5 @@ const PointType = {
   RESTAURANT: 'restaurant',
 };
 
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PAST: 'past',
-};
-
-export { fishDescriptions, cities, types, fishTitle, PointType, FilterType };
+export { fishDescriptions, cities, types, fishTitle, PointType };
 

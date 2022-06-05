@@ -1,6 +1,7 @@
 import { render, replace, remove } from '../framework/render';
 import NewEditingFormView from '../view/editing-form-view';
 import NewItemView from '../view/item-view';
+import { UserAction, UpdateType } from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -12,23 +13,26 @@ export default class EventPresenter {
   #offers = null;
   #pointListContainer = null;
   #changeData = null;
+  #changeMode = null;
   #pointComponent = null;
   #pointEditComponent = null;
-  #changeMode = null;
+
   #destinations = null;
 
   #mode = Mode.DEFAULT;
 
-  constructor(point, offers, taskListContainer, changeData, changeMode, destinations) {
-    this.#point = point;
-    this.#offers = offers;
-    this.#pointListContainer = taskListContainer;
+  constructor(pointListContainer, changeData, changeMode) {
+
+    this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
-    this.#destinations = destinations;
+
   }
 
-  init = () => {
+  init = (point, offers, destinations) => {
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
@@ -39,6 +43,7 @@ export default class EventPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setCloseClickHandler(this.resetView);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
     this.#pointComponent.setChooseFavoriteClickHandler(() => this.#handleFavoriteClick());
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -64,7 +69,13 @@ export default class EventPresenter {
     remove(this.#pointEditComponent);
   };
 
-  #handleFavoriteClick = () => this.#changeData({ ...this.#point, isFavorite: !this.#point.isFavorite });
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      { ...this.#point, isFavorite: !this.#point.isFavorite },
+    );
+  };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -97,8 +108,20 @@ export default class EventPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #handleFormSubmit = (point) => {
+    this.#changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      point,
+    );
     this.#replaceFormToCard();
-    this.#changeData(this.#point);
   };
 }

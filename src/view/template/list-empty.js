@@ -1,4 +1,12 @@
-const createEmptyTemplate = () => (
-  '<p class="trip-events__msg">Click New Event to create your first point</p>'
-);
+import { NoPointsTextType } from '../../const.js';
+
+const createEmptyTemplate = (filterType) => {
+  const noPointsTextValue = NoPointsTextType[filterType];
+
+  return (
+    `<p class="trip-events__msg">
+      ${noPointsTextValue}
+    </p>`);
+};
+
 export { createEmptyTemplate };

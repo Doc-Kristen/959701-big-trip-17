@@ -10,7 +10,7 @@ export default class NewButtonCreateEventView extends AbstractView {
 
   setAddEventClickHandler = (callback) => {
     this._callback.editClick = callback;
-    this.element.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#addEventClickHandler);
+    this.element.addEventListener('click', this.#addEventClickHandler);
   };
 
   #addEventClickHandler = (evt) => {

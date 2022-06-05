@@ -2,7 +2,6 @@ import { getRandomInteger, getRandomArrayPart, getArrayRandomElement } from './u
 import { fishDescriptions, cities, types } from './const-mock';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { FilterType } from './const-mock';
 
 const minNumberForRandom = -7;
 const maxNumberForRandom = 7;
@@ -69,12 +68,17 @@ const getFishOffers = () => ([
     type: 'ship',
     offers: [
       {
-        id: 3,
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
         title: 'Upgrade to comfort class',
         price: 170
       },
       {
-        id: 4,
+        id: 3,
         title: 'Upgrade to business class',
         price: 150
       }
@@ -92,6 +96,11 @@ const getFishOffers = () => ([
         id: 2,
         title: 'With air conditioning',
         price: 180
+      },
+      {
+        id: 3,
+        title: 'Upgrade to business class',
+        price: 150
       }
     ]
   },
@@ -99,12 +108,17 @@ const getFishOffers = () => ([
     type: 'flight',
     offers: [
       {
-        id: 3,
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
         title: 'Upgrade to comfort class',
         price: 170
       },
       {
-        id: 4,
+        id: 3,
         title: 'Upgrade to business class',
         price: 150
       }
@@ -119,12 +133,12 @@ const getFishOffers = () => ([
         price: 70
       },
       {
-        id: 3,
+        id: 2,
         title: 'Add breakfast',
         price: 110
       },
       {
-        id: 5,
+        id: 3,
         title: 'Order a meal from the restaurant',
         price: 30
       }
@@ -134,9 +148,20 @@ const getFishOffers = () => ([
     type: 'sightseeing',
     offers: [
       {
-        id: 3,
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
         title: 'Add breakfast',
         price: 110
+      }
+      ,
+      {
+        id: 3,
+        title: 'Order a meal from the restaurant',
+        price: 30
       }
     ]
   },
@@ -144,7 +169,17 @@ const getFishOffers = () => ([
     type: 'restaurant',
     offers: [
       {
-        id: 5,
+        id: 1,
+        title: 'Upgrade to a business class',
+        price: 120
+      },
+      {
+        id: 2,
+        title: 'Order a meal from the restaurant',
+        price: 30
+      },
+      {
+        id: 3,
         title: 'Order a meal from the restaurant',
         price: 30
       }
@@ -173,22 +208,12 @@ const generatetDestination = () => ({
   ]
 });
 
-// Поиск оффера по выбранному типу
-
-const findOffes = (typeOffer, ArrayOffers) => {
-  if (typeOffer === undefined) { return []; }
-  return ArrayOffers.find((offer) => offer.type === typeOffer).offers;
-
-};
-
 const allDestinations = Array.from({ length: NUMBER_ROUTE_POINTS }, generatetDestination);
 
 // Генерация точки маршрута
 
 const generatePoint = () => {
-  const fishOffers = getFishOffers();
   const typeOffer = types[getRandomInteger(0, types.length - 1)];
-  const findedAllOffes = findOffes(typeOffer, fishOffers);
   const startDate = getRandomInteger(minNumberForRandom, maxNumberForRandom);
   const endDate = startDate + getRandomInteger(minNumberForRandom, maxNumberForRandom);
   const maxNumber = Math.max(startDate, endDate);
@@ -201,15 +226,9 @@ const generatePoint = () => {
     'destination': allDestinations[getRandomInteger(0, allDestinations.length - 1)],
     'id': nanoid(),
     'is_favorite': Boolean(getRandomInteger(0, 1)),
-    'offers': getRandomArrayPart(findedAllOffes),
+    'offers': [getRandomInteger(0,3), getRandomInteger(0,3)],
     'type': typeOffer,
   };
 };
 
-const generateFilter = () => Object.values(FilterType).map(
-  (filterName) => ({
-    name: filterName,
-  }),
-);
-
-export { generatePoint, getFishOffers, generatetDestination, allDestinations, generateFilter };
+export { generatePoint, getFishOffers, generatetDestination, allDestinations };
