@@ -1,5 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { createNewFormTemplate } from './template/form-creation-template.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 // Форма создания точки маршрута
 
@@ -7,6 +10,7 @@ export default class NewFormView extends AbstractStatefulView {
 
   #allOffers = null;
   #allDestinations = null;
+  #datepicker = null;
 
   constructor(point, allOffers, allDestinations) {
     super();
@@ -30,7 +34,56 @@ export default class NewFormView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDateFromPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  };
+
+  #setDateToPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
   };
 
   #pointTypeClickHandler = (evt) => {
@@ -72,9 +125,9 @@ export default class NewFormView extends AbstractStatefulView {
 
   #basePriceInputHandler = (evt) => {
     evt.preventDefault();
-    const reg = /^[1-9]\d*$/;
+    const reg = /\D+/g;
     this._setState({
-      newPrice: reg.test(evt.target.value) ? evt.target.value : '',
+      newPrice: evt.target.value.replace(reg, '')
     });
   };
 
@@ -91,13 +144,13 @@ export default class NewFormView extends AbstractStatefulView {
   };
 
   setDeleteClickHandler = (callback) => {
-    this._callback.editClick = callback;
+    this._callback.deleteClick = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.deleteClick();
   };
 
   #setInnerHandlers = () => {
