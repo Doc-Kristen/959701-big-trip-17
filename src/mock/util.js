@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-
+import { TimeInMs } from '../const';
 // Генерация случайного числа из диапазона
 
 const getRandomInteger = (a = 0, b = 1000) => {
@@ -33,15 +33,15 @@ const getRandomArrayPart = (arr) => {
 const getDifferenceTime = (date1, date2) => {
   let differenceTime = '';
   const difference = (new Date(date2)) - (new Date(date1));
-  const day = Math.floor(difference / (1000 * 60 * 60 * 24));
-  const hour = Math.floor((difference / 1000 / 60 / 60) % 24);
-  const min = Math.floor((difference / 1000 / 60) % 60);
-  if (difference < 3600000) {
+  const day = Math.floor(difference / (TimeInMs.SECOND * 60 * 60 * 24));
+  const hour = Math.floor((difference / TimeInMs.SECOND / 60 / 60) % 24);
+  const min = Math.floor((difference / TimeInMs.SECOND / 60) % 60);
+  if (difference < TimeInMs.HOUR) {
     differenceTime = `${min}M`;
-  } else if (difference >= 3600000 && difference < 86400000) {
+  } else if (difference >= TimeInMs.HOUR && difference < TimeInMs.DAY) {
     differenceTime = `${hour}H ${min}M`;
   } else {
-    differenceTime = `${day}D ${hour}H`;
+    differenceTime = `${day}D ${hour}H ${min}M`;
   }
   return differenceTime;
 };

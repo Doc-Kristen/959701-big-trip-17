@@ -1,5 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { createFormTemplate } from './template/editing-form-template.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 // Форма редактирования точки маршрута
 
@@ -7,6 +10,7 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #allOffers = null;
   #allDestinations = null;
+  #datepicker = null;
 
   constructor(point, allOffers, allDestinations) {
     super();
@@ -31,9 +35,20 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setCloseClickHandler(this._callback.editClick);
     this.setDeleteClickHandler(this._callback.deleteClick);
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   };
 
   #pointTypeClickHandler = (evt) => {
@@ -59,6 +74,44 @@ export default class NewEditingFormView extends AbstractStatefulView {
     }
   };
 
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDateFromPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  };
+
+  #setDateToPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
+  };
+
   #offersToggleHandler = (evt) => {
     if (!evt.target.classList.contains('event__offer-checkbox')) {
       return;
@@ -75,9 +128,9 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #basePriceInputHandler = (evt) => {
     evt.preventDefault();
-    const reg = /^[1-9]\d*$/;
+    const reg = /\D+/g;
     this._setState({
-      newPrice: reg.test(evt.target.value) ? evt.target.value : '',
+      newPrice: evt.target.value.replace(reg, '')
     });
   };
 
