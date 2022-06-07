@@ -36,6 +36,9 @@ export default class NewPointPresenter {
     this.#NewPointFormComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     render(this.#NewPointFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+
+    this.#NewPointFormComponent.reset(this.#point);
+
     document.addEventListener('keydown', this.#escKeyDownHandler);
 
   };
@@ -74,7 +77,7 @@ export default class NewPointPresenter {
     this.#changeData(
       UserAction.ADD_TASK,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      { id: nanoid(), ...point },
     );
     this.destroy();
   };

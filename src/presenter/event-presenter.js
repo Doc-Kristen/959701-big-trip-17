@@ -106,6 +106,7 @@ export default class EventPresenter {
 
   #handleEditClick = () => {
     this.#replaceCardToForm();
+    this.#pointEditComponent.reset(this.#point);
   };
 
   #handleDeleteClick = (point) => {

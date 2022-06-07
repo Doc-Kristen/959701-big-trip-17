@@ -8,4 +8,4 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => nowDate > point.dateTo || point.dateFrom < nowDate && point.dateTo > nowDate),
 };
 
-export { filter };
+export { filter, nowDate };

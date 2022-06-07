@@ -15,8 +15,8 @@ const tripMainElement = document.querySelector('.trip-main');
 
 const DEFAULT_POINT = {
   basePrice: '',
-  dateFrom: null,
-  dateTo: null,
+  dateFrom: new Date,
+  dateTo: new Date,
   destination: { description: '', name: null, pictures: [] },
   isFavorite: false,
   offers: [],

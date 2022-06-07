@@ -28,4 +28,11 @@ const NoPointsTextType = {
   [FilterType.PAST]: 'There are no past events now',
 };
 
-export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType };
+const TimeInMs = {
+  DAY: 86400000,
+  HOUR: 3600000,
+  MINUTE: 60000,
+  SECOND: 1000,
+};
+
+export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs };
