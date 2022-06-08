@@ -20,7 +20,7 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const points = this.#pointsModel.tasks;
+    const points = this.#pointsModel.points;
 
     return [
       {

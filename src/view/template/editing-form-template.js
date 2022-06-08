@@ -1,6 +1,6 @@
 import he from 'he';
-import { humanizePointDueDate } from '../../mock/util';
-import { PointType } from '../../mock/const-mock';
+import { humanizePointDueDate } from '../../utils.js';
+import { PointType } from '../../const.js';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
   const checked = type === checkedType ? 'checked' : '';

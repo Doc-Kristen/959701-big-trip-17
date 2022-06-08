@@ -1,3 +1,15 @@
+const PointType = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECKIN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant',
+};
+
 const SortType = {
   DAY: 'day',
   TIME: 'time',
@@ -14,6 +26,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const FilterType = {
@@ -35,4 +48,4 @@ const TimeInMs = {
   SECOND: 1000,
 };
 
-export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs };
+export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType };

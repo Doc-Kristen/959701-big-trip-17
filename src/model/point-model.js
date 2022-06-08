@@ -1,66 +1,95 @@
-import { generatePoint } from '../mock/trip-mock.js';
 import Observable from '../framework/observable.js';
+import { UpdateType } from '../const.js';
 
-const NUMBER_ROUTE_POINTS = 15;
+export default class PointsModel extends Observable {
+  #pointsApiService = null;
+  #points = [];
 
-const adaptData = (notAdaptedData) => notAdaptedData.map((point) => ({
-  basePrice: point['base_price'],
-  dateFrom: point['date_from'],
-  dateTo: point['date_to'],
-  destination: point['destination'],
-  id: point['id'],
-  isFavorite: point['is_favorite'],
-  offers: point['offers'],
-  type: point['type']
-}));
-
-export default class PointModel extends Observable {
-
-  #notAdaptedData = Array.from({ length: NUMBER_ROUTE_POINTS }, generatePoint);
-
-  #tasks = adaptData(this.#notAdaptedData);
-
-  get tasks() {
-    return this.#tasks;
+  constructor(pointsApiService) {
+    super();
+    this.#pointsApiService = pointsApiService;
   }
 
-  updateTask = (updateType, update) => {
-    const index = this.#tasks.findIndex((task) => task.id === update.id);
+  get points() {
+    return this.#points;
+  }
 
-    if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+  init = async () => {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch (err) {
+      this.#points = [];
     }
 
-    this.#tasks = [
-      ...this.#tasks.slice(0, index),
-      update,
-      ...this.#tasks.slice(index + 1),
-    ];
-
-    this._notify(updateType, update);
+    this._notify(UpdateType.INIT);
   };
 
-  addTask = (updateType, update) => {
-    this.#tasks = [
-      update,
-      ...this.#tasks,
-    ];
-
-    this._notify(updateType, update);
-  };
-
-  deleteTask = (updateType, update) => {
-    const index = this.#tasks.findIndex((task) => task.id === update.id);
+  updatePoint = async (updateType, update) => {
+    const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t update unexisting point');
     }
 
-    this.#tasks = [
-      ...this.#tasks.slice(0, index),
-      ...this.#tasks.slice(index + 1),
-    ];
+    try {
+      const response = await this.#pointsApiService.updatePoint(update);
+      const updatedPoint = this.#adaptToClient(response);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        updatedPoint,
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType, updatedPoint);
+    } catch (err) {
+      throw new Error('Can\'t update point');
+    }
+  };
 
-    this._notify(updateType);
+  addPoint = async (updateType, update) => {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch (err) {
+      throw new Error('Can\'t add point');
+    }
+  };
+
+  deletePoint = async (updateType, update) => {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t delete unexisting point');
+    }
+
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t delete point');
+    }
+  };
+
+  #adaptToClient = (point) => {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
   };
 }
