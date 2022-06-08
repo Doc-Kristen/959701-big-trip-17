@@ -12,6 +12,7 @@ export default class DestinationsModel {
       this.#destinations = await this.#destinationsApiService.destinations;
     } catch(err) {
       this.#destinations = [];
+      throw new Error('Can\'t get destinations');
     }
   };
 

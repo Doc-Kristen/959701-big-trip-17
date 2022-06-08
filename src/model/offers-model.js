@@ -24,30 +24,3 @@ export default class OffersModel extends Observable {
     this._notify(UpdateType.INIT);
   };
 }
-
-// export default class OfferModel extends Observable {
-//   #tasksApiService = null;
-//   #offers = [];
-
-//   constructor(tasksApiService) {
-//     super();
-//     this.#tasksApiService = tasksApiService;
-
-//   }
-
-//   get offers() {
-//     console.log('сработал offers', this.#offers );
-//     return this.#offers;
-//   }
-
-//   init = async () => {
-//     try {
-//       const tasks = await this.#tasksApiService.offers;
-//       this.#offers = tasks;
-//       console.log('сработал init',this.#offers);
-//     } catch(err) {
-//       this.#offers = [];
-//     }
-//     this._notify(UpdateType.INIT);
-//   };
-// }

@@ -59,6 +59,13 @@ export default class PagePresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
+  init = () => {
+
+    this.#renderBoard();
+    this.#renderButtonCreateEvent();
+
+  };
+
   get points() {
 
     this.#filterType = this.#filterModel.filter;
@@ -84,13 +91,6 @@ export default class PagePresenter {
   get destinations() {
     return this.#destinationsModel.destinations;
   }
-
-  init = () => {
-
-    this.#renderBoard();
-    this.#renderButtonCreateEvent();
-
-  };
 
   #renderLoading = () => {
     render(this.#loadingComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
@@ -127,7 +127,6 @@ export default class PagePresenter {
     if (this.points.length > 0) {
       this.#renderTripInfo();
       this.#renderSort();
-
       this.#renderEvents(this.points, this.offers, this.destinations);
     } else {
       this.#renderNoEventConponent();

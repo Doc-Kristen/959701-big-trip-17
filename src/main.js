@@ -27,7 +27,6 @@ const filterPresenter = new FilterPresenter(controlsFiltersElement, filterModel,
 
 filterPresenter.init();
 pagePresenter.init();
-pointsModel.init();
-offersModel.init();
-
-
+offersModel.init().finally(() => {
+  pointsModel.init();
+});
