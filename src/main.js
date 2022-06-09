@@ -8,6 +8,8 @@ import FilterModel from './model/filter-model.js';
 import PointsApiService from './services/points-api-service.js';
 import OffersApiService from './services/offers-api-service.js';
 import DestinationsApiService from './services/destinations-api-service.js';
+import ErrorView from './view/error-view.js';
+import { ErrorTextType } from './const.js';
 
 const AUTHORIZATION = 'Basic bD5kbA79jl12h9f7fgfhhjgkh';
 const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/';
@@ -16,9 +18,9 @@ const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
 const controlsFiltersElement = document.querySelector('.trip-controls__filters');
 
-const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION));
-const offersModel = new OffersModel(new OffersApiService(END_POINT, AUTHORIZATION));
-const destinationsModel = new DestinationsModel(new DestinationsApiService(END_POINT, AUTHORIZATION));
+const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.POINTS), tripEventsElement);
+const offersModel = new OffersModel(new OffersApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.OFFERS), tripEventsElement);
+const destinationsModel = new DestinationsModel(new DestinationsApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.DESTINATIONS), tripEventsElement);
 
 const filterModel = new FilterModel();
 

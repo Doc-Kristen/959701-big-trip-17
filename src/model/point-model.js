@@ -1,13 +1,19 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
+import { RenderPosition, render } from '../framework/render.js';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
+  #errorComponent = null;
+  #containerElement = null;
   #points = [];
 
-  constructor(pointsApiService) {
+  constructor(pointsApiService, errorComponent, containerElement) {
     super();
     this.#pointsApiService = pointsApiService;
+    this.#errorComponent = errorComponent;
+    this.#containerElement = containerElement;
+
   }
 
   get points() {
@@ -20,6 +26,8 @@ export default class PointsModel extends Observable {
       this.#points = points.map(this.#adaptToClient);
     } catch (err) {
       this.#points = [];
+      render(this.#errorComponent, this.#containerElement, RenderPosition.AFTERBEGIN);
+      throw new Error('Can\'t get point');
     }
 
     this._notify(UpdateType.INIT);

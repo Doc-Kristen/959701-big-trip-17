@@ -35,6 +35,12 @@ const FilterType = {
   PAST: 'past',
 };
 
+const ErrorTextType = {
+  OFFERS: 'Can\'t get offers. Try again later.',
+  POINTS: 'Can\'t get point. Try again later.',
+  DESTINATIONS: 'Can\'t get destinations. Try again later.',
+};
+
 const NoPointsTextType = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.FUTURE]: 'There are no future events now',
@@ -48,4 +54,4 @@ const TimeInMs = {
   SECOND: 1000,
 };
 
-export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType };
+export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType, ErrorTextType };

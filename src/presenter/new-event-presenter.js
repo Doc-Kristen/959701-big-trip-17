@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render';
 import { UserAction, UpdateType } from '../const.js';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import NewFormView from '../view/form-creation-view';
 
 export default class NewPointPresenter {
@@ -77,7 +77,7 @@ export default class NewPointPresenter {
     this.#changeData(
       UserAction.ADD_TASK,
       UpdateType.MINOR,
-      { id: nanoid(), ...point },
+      point
     );
     this.destroy();
   };

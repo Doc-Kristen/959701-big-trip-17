@@ -151,13 +151,13 @@ export default class PagePresenter {
     this.#newButtonCreateEventView.element.disabled = false;
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this.#pointsModel.updateTask(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_TASK:
-        this.#pointsModel.addTask(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_TASK:
-        this.#pointsModel.deleteTask(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);
         break;
     }
   };
