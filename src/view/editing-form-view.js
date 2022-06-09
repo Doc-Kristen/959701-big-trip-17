@@ -184,6 +184,9 @@ export default class NewEditingFormView extends AbstractStatefulView {
     checkedDestination: point.destination,
     checkedOffers: point.offers,
     newPrice: point.basePrice,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
   });
 
   static parseStateToPoint = (state) => {
@@ -202,6 +205,9 @@ export default class NewEditingFormView extends AbstractStatefulView {
     delete point.checkedDestination;
     delete point.checkedOffers;
     delete point.newPrice;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   };
