@@ -1,3 +1,15 @@
+const PointType = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECKIN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant',
+};
+
 const SortType = {
   DAY: 'day',
   TIME: 'time',
@@ -14,12 +26,19 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
+};
+
+const ErrorTextType = {
+  OFFERS: 'Can\'t get offers. Try again later.',
+  POINTS: 'Can\'t get point. Try again later.',
+  DESTINATIONS: 'Can\'t get destinations. Try again later.',
 };
 
 const NoPointsTextType = {
@@ -35,4 +54,4 @@ const TimeInMs = {
   SECOND: 1000,
 };
 
-export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs };
+export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType, ErrorTextType };

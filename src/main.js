@@ -1,23 +1,34 @@
-import './model/point-model';
+import './model/point-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PagePresenter from './presenter/page-presenter.js';
-import PointModel from './model/point-model';
-import OfferModel from './model/offer-model';
-import DestinationModel from './model/destination-model';
-import FilterModel from './model/filter-model';
+import PointsModel from './model/point-model';
+import OffersModel from './model/offers-model';
+import DestinationsModel from './model/destinations-model';
+import FilterModel from './model/filter-model.js';
+import PointsApiService from './services/points-api-service.js';
+import OffersApiService from './services/offers-api-service.js';
+import DestinationsApiService from './services/destinations-api-service.js';
+import ErrorView from './view/error-view.js';
+import { ErrorTextType } from './const.js';
+
+const AUTHORIZATION = 'Basic bD5kbA79jl12h9f7fgfhhjgkh';
+const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/';
 
 const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
 const controlsFiltersElement = document.querySelector('.trip-controls__filters');
 
-const pointModel = new PointModel();
-const offerModel = new OfferModel();
-const destinationModel = new DestinationModel();
+const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.POINTS), tripEventsElement);
+const offersModel = new OffersModel(new OffersApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.OFFERS), tripEventsElement);
+const destinationsModel = new DestinationsModel(new DestinationsApiService(END_POINT, AUTHORIZATION), new ErrorView(ErrorTextType.DESTINATIONS), tripEventsElement);
+
 const filterModel = new FilterModel();
 
-const pagePresenter = new PagePresenter(pointModel, offerModel, destinationModel, tripEventsElement, filterModel);
-const filterPresenter = new FilterPresenter(controlsFiltersElement, filterModel, pointModel);
+const pagePresenter = new PagePresenter(pointsModel, offersModel, destinationsModel, tripEventsElement, filterModel);
+const filterPresenter = new FilterPresenter(controlsFiltersElement, filterModel, pointsModel);
 
 filterPresenter.init();
 pagePresenter.init();
-
+offersModel.init().finally(() => {
+  pointsModel.init();
+});

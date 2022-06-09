@@ -1,5 +1,4 @@
-import { humanizeTaskDueDate, getDifference } from '../../mock/util.js';
-import { findSelectedOffers } from '../../mock/util.js';
+import { getDifferenceTime, findSelectedOffers, humanizeTaskDueDate } from '../../utils.js';
 
 const renderSelectedOffers = (type, offersList, offers) => {
 
@@ -48,7 +47,7 @@ const createItemTemplate = (point, allOffers) => {
       &mdash;
       <time class="event__end-time" datetime=${dateTo}>${dateEnd}</time>
     </p>
-    <p class="event__duration">${getDifference(dateFrom, dateTo)}</p>
+    <p class="event__duration">${getDifferenceTime(dateFrom, dateTo)}</p>
   </div>
   <p class="event__price">
     &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

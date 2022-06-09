@@ -1,7 +1,7 @@
 import { filter } from '../utils.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
-import { sortDayUp, sortTimeDown, sortPriceDown } from '../mock/util.js';
+import { sortDayUp, sortTimeDown, sortPriceDown } from '../utils.js';
 import SortingView from '../view/sorting-view.js';
 import NewTripInfoView from '../view/info-view.js';
 import ListView from '../view/list-view.js';
@@ -9,6 +9,7 @@ import NoPointsView from '../view/list-empty-view.js';
 import NewButtonCreateEventView from '../view/button-new-event-view.js';
 import EventPresenter from './event-presenter.js';
 import NewPointPresenter from './new-event-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 
 const tripMainElement = document.querySelector('.trip-main');
@@ -28,39 +29,48 @@ export default class PagePresenter {
 
   #sortComponent = null;
   #newTripInfoView = new NewTripInfoView();
+  #loadingComponent = new LoadingView();
   #newListView = new ListView();
   #newButtonCreateEventView = new NewButtonCreateEventView();
   #newNoPointsView = null;
 
-  #tasksModel = null;
+  #pointsModel = null;
   #filterModel = null;
   #offersModel = null;
   #destinationsModel = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   #taskPresenter = new Map();
   #pointNewPresenter = null;
 
-  constructor(taskModel, offersModel, destinationsModel, boardContainer, filterModel) {
+  constructor(pointsModel, offersModel, destinationsModel, boardContainer, filterModel) {
     this.#boardContainer = boardContainer;
 
-    this.#tasksModel = taskModel;
+    this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
-    this.#offersModel = offersModel.offers;
-    this.#destinationsModel = destinationsModel.allDestinations;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
 
     this.#pointNewPresenter = new NewPointPresenter(this.#newListView.element, this.#handleViewAction, this.#handleModeChange);
 
-    this.#tasksModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get tasks() {
+  init = () => {
+
+    this.#renderBoard();
+    this.#renderButtonCreateEvent();
+
+  };
+
+  get points() {
 
     this.#filterType = this.#filterModel.filter;
-    const tasks = this.#tasksModel.tasks;
-    const filteredTasks = filter[this.#filterType](tasks);
+    const points = this.#pointsModel.points;
+    const filteredTasks = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
@@ -78,15 +88,12 @@ export default class PagePresenter {
     return this.#offersModel.offers;
   }
 
-  get allDestinations() {
-    return this.#destinationsModel.allDestinations;
+  get destinations() {
+    return this.#destinationsModel.destinations;
   }
 
-  init = () => {
-
-    this.#renderBoard();
-    this.#renderButtonCreateEvent();
-
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
   #createNewEvent = (events, offers, destinations) => {
@@ -99,24 +106,28 @@ export default class PagePresenter {
     render(this.#newNoPointsView, this.#boardContainer, RenderPosition.AFTEREND);
   };
 
-  #renderEvent = (tasks, offers, destinations) => {
+  #renderEvent = (points, offers, destinations) => {
 
     const taskPresenter = new EventPresenter(this.#newListView.element, this.#handleViewAction, this.#handleModeChange);
 
-    taskPresenter.init(tasks, offers, destinations);
-    this.#taskPresenter.set(tasks.id, taskPresenter);
+    taskPresenter.init(points, offers, destinations);
+    this.#taskPresenter.set(points.id, taskPresenter);
 
   };
 
   #renderEvents = (tasks, offers, destinations) => tasks.forEach((task) => this.#renderEvent(task, offers, destinations));
 
   #renderBoard = () => {
+    render(this.#newListView, this.#boardContainer);
 
-    if (this.tasks.length > 0) {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+    if (this.points.length > 0) {
       this.#renderTripInfo();
       this.#renderSort();
-      render(this.#newListView, this.#boardContainer);
-      this.#renderEvents(this.tasks, this.#offersModel, this.#destinationsModel);
+      this.#renderEvents(this.points, this.offers, this.destinations);
     } else {
       this.#renderNoEventConponent();
     }
@@ -128,7 +139,7 @@ export default class PagePresenter {
     this.#newButtonCreateEventView.setAddEventClickHandler(() => {
       this.#newButtonCreateEventView.element.disabled = true;
       this.#currentSortType = SortType.DAY;
-      this.#createNewEvent(DEFAULT_POINT, this.#offersModel, this.#destinationsModel);
+      this.#createNewEvent(DEFAULT_POINT, this.offers, this.destinations);
     });
   };
 
@@ -140,13 +151,13 @@ export default class PagePresenter {
     this.#newButtonCreateEventView.element.disabled = false;
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this.#tasksModel.updateTask(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_TASK:
-        this.#tasksModel.addTask(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_TASK:
-        this.#tasksModel.deleteTask(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);
         break;
     }
   };
@@ -155,6 +166,7 @@ export default class PagePresenter {
     this.#taskPresenter.forEach((presenter) => presenter.destroy());
     this.#taskPresenter.clear();
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     this.#currentSortType = SortType.DAY;
 
     if (this.#newNoPointsView) {
@@ -188,7 +200,7 @@ export default class PagePresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#taskPresenter.get(data.id).init(data, this.#offersModel, this.#destinationsModel);
+        this.#taskPresenter.get(data.id).init(data, this.offers, this.destinations);
         break;
       case UpdateType.MINOR:
         this.#clearTaskList();
@@ -196,6 +208,11 @@ export default class PagePresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearTaskList();
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
