@@ -1,16 +1,15 @@
 import { filter } from '../utils.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortDayUp, sortTimeDown, sortPriceDown } from '../utils.js';
 import SortingView from '../view/sorting-view.js';
 import NewTripInfoView from '../view/info-view.js';
 import ListView from '../view/list-view.js';
 import NoPointsView from '../view/list-empty-view.js';
-import NewButtonCreateEventView from '../view/button-new-event-view.js';
 import EventPresenter from './event-presenter.js';
 import NewPointPresenter from './new-event-presenter.js';
 import LoadingView from '../view/loading-view.js';
-
 
 const tripMainElement = document.querySelector('.trip-main');
 
@@ -24,6 +23,11 @@ const DEFAULT_POINT = {
   type: 'taxi',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export default class PagePresenter {
   #boardContainer = null;
 
@@ -31,7 +35,6 @@ export default class PagePresenter {
   #newTripInfoView = new NewTripInfoView();
   #loadingComponent = new LoadingView();
   #newListView = new ListView();
-  #newButtonCreateEventView = new NewButtonCreateEventView();
   #newNoPointsView = null;
 
   #pointsModel = null;
@@ -42,6 +45,7 @@ export default class PagePresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
   #taskPresenter = new Map();
   #pointNewPresenter = null;
 
@@ -62,7 +66,6 @@ export default class PagePresenter {
   init = () => {
 
     this.#renderBoard();
-    this.#renderButtonCreateEvent();
 
   };
 
@@ -96,9 +99,10 @@ export default class PagePresenter {
     render(this.#loadingComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #createNewEvent = (events, offers, destinations) => {
+  createNewEvent = (callback) => {
+    this.#currentSortType = SortType.DEFAULT;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#pointNewPresenter.init(events, offers, destinations);
+    this.#pointNewPresenter.init(DEFAULT_POINT, this.offers, this.destinations, callback);
   };
 
   #renderNoEventConponent = () => {
@@ -134,32 +138,42 @@ export default class PagePresenter {
 
   };
 
-  #renderButtonCreateEvent = () => {
-    render(this.#newButtonCreateEventView, tripMainElement);
-    this.#newButtonCreateEventView.setAddEventClickHandler(() => {
-      this.#newButtonCreateEventView.element.disabled = true;
-      this.#currentSortType = SortType.DAY;
-      this.#createNewEvent(DEFAULT_POINT, this.offers, this.destinations);
-    });
-  };
-
   #renderTripInfo = () => {
     render(this.#newTripInfoView, tripMainElement, RenderPosition.AFTERBEGIN);
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
-    this.#newButtonCreateEventView.element.disabled = false;
+  #handleViewAction = async (actionType, updateType, update) => {
+
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#taskPresenter.get(update.id).setSaving();
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch (err) {
+          this.#taskPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_TASK:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#pointNewPresenter.setSaving();
+
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+          this.#pointNewPresenter.destroy();
+        } catch (err) {
+          this.#pointNewPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_TASK:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#taskPresenter.get(update.id).setDeleting();
+        try {
+          await this.#pointsModel.deletePoint(updateType, update);
+        } catch (err) {
+          this.#taskPresenter.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #clearTaskList = () => {
@@ -177,7 +191,6 @@ export default class PagePresenter {
   #handleModeChange = () => {
     this.#taskPresenter.forEach((presenter) => presenter.resetView());
     this.#pointNewPresenter.destroy();
-    this.#newButtonCreateEventView.element.disabled = false;
   };
 
   #handleSortTypeChange = (sortType) => {
