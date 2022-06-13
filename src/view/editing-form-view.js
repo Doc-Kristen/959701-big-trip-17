@@ -67,13 +67,11 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
     if (this.#allDestinations.find((destination) => destination.name === evt.target.value)) {
       const selectedDestination = this.#allDestinations.find((destination) => destination.name === evt.target.value);
-      // Потом еще раз перепроверить
       this.updateElement({
         checkedDestination: selectedDestination,
       });
     }
   };
-
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({

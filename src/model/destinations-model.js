@@ -1,7 +1,7 @@
 import { render, RenderPosition } from '../framework/render';
 import Observable from '../framework/observable';
 
-export default class DestinationsModel extends Observable{
+export default class DestinationsModel extends Observable {
   #destinationsApiService = null;
   #errorComponent = null;
   #containerElement = null;
@@ -19,7 +19,7 @@ export default class DestinationsModel extends Observable{
   init = async () => {
     try {
       this.#destinations = await this.#destinationsApiService.destinations;
-    } catch(err) {
+    } catch (err) {
       this.#destinations = [];
       render(this.#errorComponent, this.#containerElement, RenderPosition.AFTERBEGIN);
       throw new Error('Can\'t get destinations');

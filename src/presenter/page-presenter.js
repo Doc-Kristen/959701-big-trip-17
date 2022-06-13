@@ -32,7 +32,7 @@ export default class PagePresenter {
   #boardContainer = null;
 
   #sortComponent = null;
-  #newTripInfoView = new NewTripInfoView();
+  #newTripInfoComponent = null;
   #loadingComponent = new LoadingView();
   #newListView = new ListView();
   #newNoPointsView = null;
@@ -67,10 +67,10 @@ export default class PagePresenter {
 
     this.#renderBoard();
 
+
   };
 
   get points() {
-
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredTasks = filter[this.#filterType](points);
@@ -122,6 +122,7 @@ export default class PagePresenter {
   #renderEvents = (tasks, offers, destinations) => tasks.forEach((task) => this.#renderEvent(task, offers, destinations));
 
   #renderBoard = () => {
+
     render(this.#newListView, this.#boardContainer);
 
     if (this.#isLoading) {
@@ -129,17 +130,21 @@ export default class PagePresenter {
       return;
     }
     if (this.points.length > 0) {
-      this.#renderTripInfo();
       this.#renderSort();
+      this.#renderTripInfo();
       this.#renderEvents(this.points, this.offers, this.destinations);
+
     } else {
       this.#renderNoEventConponent();
+
     }
 
   };
 
   #renderTripInfo = () => {
-    render(this.#newTripInfoView, tripMainElement, RenderPosition.AFTERBEGIN);
+
+    this.#newTripInfoComponent = new NewTripInfoView(this.#pointsModel.points.sort(sortDayUp), this.offers);
+    render(this.#newTripInfoComponent, tripMainElement, RenderPosition.AFTERBEGIN);
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
@@ -179,6 +184,7 @@ export default class PagePresenter {
   #clearTaskList = () => {
     this.#taskPresenter.forEach((presenter) => presenter.destroy());
     this.#taskPresenter.clear();
+    remove(this.#newTripInfoComponent);
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
     this.#currentSortType = SortType.DAY;

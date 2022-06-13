@@ -1,3 +1,4 @@
+
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const {type, name, count} = filter;
   return `<div class="trip-filters__filter">

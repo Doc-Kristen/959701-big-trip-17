@@ -40,9 +40,9 @@ const handleButtonCreateEventClick = () => {
   newButtonCreateEventView.element.disabled = true;
 };
 
-filterPresenter.init();
 pagePresenter.init();
 offersModel.init().finally(() => {
+  filterPresenter.init();
   pointsModel.init();
 });
 

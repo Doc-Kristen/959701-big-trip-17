@@ -8,7 +8,7 @@ const createNoTaskTemplate = (errorTextType) => (
 
 export default class ErrorView extends AbstractView {
   #errorTextType = null;
-  constructor (errorTextType) {
+  constructor(errorTextType) {
     super();
     this.#errorTextType = errorTextType;
   }
