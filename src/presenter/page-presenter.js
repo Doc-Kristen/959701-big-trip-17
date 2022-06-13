@@ -100,7 +100,7 @@ export default class PagePresenter {
   };
 
   createNewEvent = (callback) => {
-    this.#currentSortType = SortType.DEFAULT;
+    this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#pointNewPresenter.init(DEFAULT_POINT, this.offers, this.destinations, callback);
   };
