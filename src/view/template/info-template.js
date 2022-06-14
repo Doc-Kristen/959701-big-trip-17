@@ -1,5 +1,4 @@
-import { humanizeTaskDueDate } from '../../utils.js';
-
+import { humanizeHeaderDueDate } from '../../utils.js';
 
 const getRouteHeader = (points) => {
 
@@ -13,7 +12,6 @@ const getRouteHeader = (points) => {
     default:
       return [`${points[0].destination.name} &mdash; ... &mdash; ${points[points.length - 1].destination.name}`];
   }
-
 };
 
 const getTripInfoDates = (point) => {
@@ -21,7 +19,7 @@ const getTripInfoDates = (point) => {
   const startDate = point[0].dateFrom;
   const endDate = point[point.length - 1].dateTo;
 
-  return `<p class="trip-info__dates">${humanizeTaskDueDate(startDate)}&nbsp;&mdash;&nbsp;${humanizeTaskDueDate(endDate)}</p>`;
+  return `<p class="trip-info__dates">${humanizeHeaderDueDate(startDate)}&nbsp;&mdash;&nbsp;${humanizeHeaderDueDate(endDate)}</p>`;
 };
 
 const getTotalPrice = (points, allOffers) => {

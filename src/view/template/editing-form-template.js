@@ -1,5 +1,5 @@
 import he from 'he';
-import { humanizePointDueDate } from '../../utils.js';
+import { humanizeEditingPointDueDate } from '../../utils.js';
 import { PointType } from '../../const.js';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
@@ -11,7 +11,7 @@ const renderPointTypes = (types, checkedType) => Object.values(types).map((type)
   </div>`;
 }).join('');
 
-const createPointTypesTemplate = (checkedType, isDisabled) => (
+const createPointTypeTemplate = (checkedType, isDisabled) => (
   `<div class='event__type-wrapper'>
     <label class='event__type  event__type-btn' for='event-type-toggle-1'>
       <span class='visually-hidden'>Choose event type</span>
@@ -66,7 +66,7 @@ const createOffersTemplate = (checkedType, allOffers, checkedOffers, isDisabled)
     `<section class='event__section  event__section--offers'>
       <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
       <div class='event__available-offers'>
-        ${renderOffers(checkedType, allOffers, checkedOffers,isDisabled)}
+        ${renderOffers(checkedType, allOffers, checkedOffers, isDisabled)}
       </div>
     </section>` : '';
 };
@@ -96,16 +96,16 @@ const createDestinationTemplate = (allDestinations, checkedDestination) => {
 
 const createFormTemplate = (data, allOffers, allDestinations) => {
   const { dateFrom, dateTo, checkedType, checkedDestination, checkedOffers, newPrice, isDisabled, isSaving, isDeleting } = data;
-  const typesTemplate = createPointTypesTemplate(checkedType, isDisabled);
+  const typesTemplate = createPointTypeTemplate(checkedType, isDisabled);
   const destinationsTemplate = createDestinationsTemplate(checkedType, checkedDestination, allDestinations, isDisabled);
   const offersTemplate = createOffersTemplate(checkedType, allOffers, checkedOffers, isDisabled);
   const destinationTemplate = createDestinationTemplate(allDestinations, checkedDestination);
 
   const dateStart = dateFrom !== null
-    ? humanizePointDueDate(dateFrom)
+    ? humanizeEditingPointDueDate(dateFrom)
     : '';
   const dateEnd = dateTo !== null
-    ? humanizePointDueDate(dateTo)
+    ? humanizeEditingPointDueDate(dateTo)
     : '';
 
   return (

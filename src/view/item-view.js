@@ -3,7 +3,7 @@ import { createItemTemplate } from './template/item-template.js';
 
 // Элемент списка точек маршрута
 
-export default class NewItemView extends AbstractView {
+export default class ItemView extends AbstractView {
   #point = null;
   #offers = null;
 

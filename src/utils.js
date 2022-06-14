@@ -24,9 +24,11 @@ const getDifferenceTime = (date1, date2) => {
 
 // Изменение формата даты
 
-const humanizePointDueDate = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
+const humanizeEditingPointDueDate = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
 
-const humanizeTaskDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('D MMMM') : '';
+const humanizeHeaderDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('D MMMM') : '';
+
+const humanizeTimeEventDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('HH:mm') : '';
 
 // Поиск массива оффера по подходящему типу
 
@@ -63,4 +65,4 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => nowDate > point.dateTo || point.dateFrom < nowDate && point.dateTo > nowDate),
 };
 
-export { filter, nowDate, getDifferenceTime, findSelectedOffers, humanizePointDueDate, humanizeTaskDueDate, sortTimeDown, sortDayUp, sortPriceDown };
+export { filter, nowDate, getDifferenceTime, findSelectedOffers, humanizeEditingPointDueDate, humanizeHeaderDueDate, humanizeTimeEventDueDate, sortTimeDown, sortDayUp, sortPriceDown };

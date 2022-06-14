@@ -63,13 +63,6 @@ export default class PagePresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  init = () => {
-
-    this.#renderBoard();
-
-
-  };
-
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
@@ -95,14 +88,20 @@ export default class PagePresenter {
     return this.#destinationsModel.destinations;
   }
 
-  #renderLoading = () => {
-    render(this.#loadingComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
+  init = () => {
+
+    this.#renderBoard();
+
   };
 
   createNewEvent = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#pointNewPresenter.init(DEFAULT_POINT, this.offers, this.destinations, callback);
+  };
+
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
   #renderNoEventConponent = () => {
@@ -147,6 +146,27 @@ export default class PagePresenter {
     render(this.#newTripInfoComponent, tripMainElement, RenderPosition.AFTERBEGIN);
   };
 
+  #clearTaskList = () => {
+    this.#taskPresenter.forEach((presenter) => presenter.destroy());
+    this.#taskPresenter.clear();
+    remove(this.#newTripInfoComponent);
+    remove(this.#sortComponent);
+    remove(this.#loadingComponent);
+    this.#currentSortType = SortType.DAY;
+
+    if (this.#newNoPointsView) {
+      remove(this.#newNoPointsView);
+    }
+  };
+
+  #renderSort = () => {
+    this.#sortComponent = new SortingView(this.#currentSortType);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+
+    render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
+
+  };
+
   #handleViewAction = async (actionType, updateType, update) => {
 
     this.#uiBlocker.block();
@@ -181,19 +201,6 @@ export default class PagePresenter {
     this.#uiBlocker.unblock();
   };
 
-  #clearTaskList = () => {
-    this.#taskPresenter.forEach((presenter) => presenter.destroy());
-    this.#taskPresenter.clear();
-    remove(this.#newTripInfoComponent);
-    remove(this.#sortComponent);
-    remove(this.#loadingComponent);
-    this.#currentSortType = SortType.DAY;
-
-    if (this.#newNoPointsView) {
-      remove(this.#newNoPointsView);
-    }
-  };
-
   #handleModeChange = () => {
     this.#taskPresenter.forEach((presenter) => presenter.resetView());
     this.#pointNewPresenter.destroy();
@@ -206,14 +213,6 @@ export default class PagePresenter {
     this.#clearTaskList();
     this.#currentSortType = sortType;
     this.#renderBoard();
-  };
-
-  #renderSort = () => {
-    this.#sortComponent = new SortingView(this.#currentSortType);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
-
-    render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
-
   };
 
   #handleModelEvent = (updateType, data) => {

@@ -3,7 +3,7 @@ import { createSortTemplate } from './template/sorting-template.js';
 
 // Сортировка
 
-export default class NewSortingView extends AbstractView {
+export default class SortingView extends AbstractView {
 
   #currentSortType = null;
 
@@ -25,8 +25,6 @@ export default class NewSortingView extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
-
 }

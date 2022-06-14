@@ -1,12 +1,13 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { createNewFormTemplate } from './template/form-creation-template.js';
 import flatpickr from 'flatpickr';
+import dayjs from 'dayjs';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
 // Форма создания точки маршрута
 
-export default class NewFormView extends AbstractStatefulView {
+export default class FormOfcreationView extends AbstractStatefulView {
 
   #allOffers = null;
   #allDestinations = null;
@@ -14,7 +15,7 @@ export default class NewFormView extends AbstractStatefulView {
 
   constructor(point, allOffers, allDestinations) {
     super();
-    this._state = NewFormView.parsePointToState(point);
+    this._state = FormOfcreationView.parsePointToState(point);
 
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
@@ -28,16 +29,8 @@ export default class NewFormView extends AbstractStatefulView {
 
   reset = (point) => {
     this.updateElement(
-      NewFormView.parsePointToState(point),
+      FormOfcreationView.parsePointToState(point),
     );
-  };
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-    this.#setDateFromPicker();
-    this.#setDateToPicker();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   removeElement = () => {
@@ -49,16 +42,12 @@ export default class NewFormView extends AbstractStatefulView {
     }
   };
 
-  #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
-  };
-
-  #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   #setDateFromPicker = () => {
@@ -86,6 +75,20 @@ export default class NewFormView extends AbstractStatefulView {
     );
   };
 
+  #dateFromChangeHandler = ([userDate]) => {
+    const isFromAfterTo = userDate > dayjs(this._state.dateTo).toDate();
+    this.updateElement({
+      dateFrom: userDate,
+      dateTo: isFromAfterTo ? userDate : this._state.dateTo,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   #pointTypeClickHandler = (evt) => {
     if (!evt.target.classList.contains('event__type-label')) {
       return;
@@ -101,7 +104,7 @@ export default class NewFormView extends AbstractStatefulView {
     evt.preventDefault();
     if (this.#allDestinations.some((destination) => destination.name === evt.target.value)) {
       const selectedDestination = this.#allDestinations.find((destination) => destination.name === evt.target.value);
-      // Потом еще раз перепроверить
+
       this.updateElement({
         name: evt.target.value,
         checkedDestination: selectedDestination,
@@ -138,9 +141,7 @@ export default class NewFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    if (this.#allDestinations.some((destination) => destination.name === this.element.querySelector('.event__input--destination').value)) {
-      this._callback.formSubmit(NewFormView.parseStateToPoint(this._state));
-    }
+    this._callback.formSubmit(FormOfcreationView.parseStateToPoint(this._state));
   };
 
   setDeleteClickHandler = (callback) => {

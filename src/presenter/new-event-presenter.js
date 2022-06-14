@@ -1,7 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render';
 import { UserAction, UpdateType } from '../const.js';
-// import { nanoid } from 'nanoid';
-import NewFormView from '../view/form-creation-view';
+import FormOfcreationView from '../view/form-creation-view';
 
 export default class NewPointPresenter {
   #point = null;
@@ -30,7 +29,7 @@ export default class NewPointPresenter {
     this.#offers = offers;
     this.#destinations = destinations;
 
-    this.#NewPointFormComponent = new NewFormView(this.#point, this.#offers, this.#destinations);
+    this.#NewPointFormComponent = new FormOfcreationView(this.#point, this.#offers, this.#destinations);
 
     this.#NewPointFormComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#NewPointFormComponent.setDeleteClickHandler(this.#handleDeleteClick);

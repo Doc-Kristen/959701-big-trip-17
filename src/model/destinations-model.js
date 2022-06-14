@@ -7,13 +7,16 @@ export default class DestinationsModel extends Observable {
   #containerElement = null;
   #destinations = [];
 
-
   constructor(destinationsApiService, errorComponent, containerElement) {
     super();
     this.#destinationsApiService = destinationsApiService;
     this.#errorComponent = errorComponent;
     this.#containerElement = containerElement;
     this.init();
+  }
+
+  get destinations() {
+    return this.#destinations;
   }
 
   init = async () => {
@@ -25,8 +28,4 @@ export default class DestinationsModel extends Observable {
       throw new Error('Can\'t get destinations');
     }
   };
-
-  get destinations() {
-    return this.#destinations;
-  }
 }

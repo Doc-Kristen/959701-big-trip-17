@@ -1,4 +1,4 @@
-import { getDifferenceTime, findSelectedOffers, humanizeTaskDueDate } from '../../utils.js';
+import { getDifferenceTime, findSelectedOffers, humanizeHeaderDueDate, humanizeTimeEventDueDate } from '../../utils.js';
 
 const renderSelectedOffers = (type, offersList, offers) => {
 
@@ -25,10 +25,10 @@ const createItemTemplate = (point, allOffers) => {
     type
   } = point;
   const dateStart = dateFrom !== null
-    ? humanizeTaskDueDate(dateFrom)
+    ? humanizeTimeEventDueDate(dateFrom)
     : '';
   const dateEnd = dateTo !== null
-    ? humanizeTaskDueDate(dateTo)
+    ? humanizeTimeEventDueDate(dateTo)
     : '';
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -36,7 +36,7 @@ const createItemTemplate = (point, allOffers) => {
 
   return (`<li class="trip-events__item">
 <div class="event">
-  <time class="event__date" datetime=${dateStart}>${dateStart}</time>
+  <time class="event__date" datetime=${dateFrom}>${humanizeHeaderDueDate(dateFrom)}</time>
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
   </div>

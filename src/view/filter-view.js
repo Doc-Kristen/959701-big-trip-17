@@ -34,4 +34,3 @@ export default class FiltersView extends AbstractView {
     this._callback.filterTypeChange(evt.target.parentNode.querySelector('.trip-filters__filter-input').value);
   };
 }
-

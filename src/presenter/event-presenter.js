@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render';
-import NewEditingFormView from '../view/editing-form-view';
-import NewItemView from '../view/item-view';
+import EditingFormView from '../view/editing-form-view';
+import ItemView from '../view/item-view';
 import { UserAction, UpdateType } from '../const.js';
 
 const Mode = {
@@ -37,8 +37,8 @@ export default class EventPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#pointComponent = new NewItemView(this.#point, this.#offers);
-    this.#pointEditComponent = new NewEditingFormView(this.#point, this.#offers, this.#destinations);
+    this.#pointComponent = new ItemView(this.#point, this.#offers);
+    this.#pointEditComponent = new EditingFormView(this.#point, this.#offers, this.#destinations);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
@@ -88,34 +88,6 @@ export default class EventPresenter {
     }
   };
 
-  #handleFavoriteClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_TASK,
-      UpdateType.MINOR,
-      { ...this.#point, isFavorite: !this.#point.isFavorite },
-    );
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.resetView();
-    }
-  };
-
-  #replaceCardToForm = () => {
-    replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#changeMode();
-    this.#mode = Mode.EDITING;
-  };
-
-  #replaceFormToCard = () => {
-    replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
-  };
-
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
@@ -140,6 +112,33 @@ export default class EventPresenter {
     this.#pointEditComponent.shake(resetFormState);
   };
 
+  #replaceCardToForm = () => {
+    replace(this.#pointEditComponent, this.#pointComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
+  };
+
+  #replaceFormToCard = () => {
+    replace(this.#pointComponent, this.#pointEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      { ...this.#point, isFavorite: !this.#point.isFavorite },
+    );
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.resetView();
+    }
+  };
 
   #handleEditClick = () => {
     this.#replaceCardToForm();

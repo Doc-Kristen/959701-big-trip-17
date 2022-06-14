@@ -3,10 +3,9 @@ import { createListTemplate } from './template/list-template.js';
 
 // Список
 
-export default class NewListView extends AbstractView {
+export default class ListView extends AbstractView {
 
   get template() {
     return createListTemplate();
   }
-
 }

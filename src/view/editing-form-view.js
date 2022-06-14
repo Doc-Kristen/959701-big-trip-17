@@ -6,21 +6,20 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 // Форма редактирования точки маршрута
 
-export default class NewEditingFormView extends AbstractStatefulView {
+export default class EditingFormView extends AbstractStatefulView {
 
   #allOffers = null;
   #allDestinations = null;
   #datepicker = null;
 
   constructor(point, allOffers, allDestinations) {
+
     super();
-
-    this._state = NewEditingFormView.parsePointToState(point);
-
+    this._state = EditingFormView.parsePointToState(point);
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
-
     this.#setInnerHandlers();
+
   }
 
   get template() {
@@ -29,7 +28,42 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   reset = (point) => {
     this.updateElement(
-      NewEditingFormView.parsePointToState(point),
+      EditingFormView.parsePointToState(point),
+    );
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
+
+  #setDateFromPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        maxDate: this._state.dateTo,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  };
+
+  #setDateToPicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
     );
   };
 
@@ -40,15 +74,6 @@ export default class NewEditingFormView extends AbstractStatefulView {
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setCloseClickHandler(this._callback.editClick);
     this.setDeleteClickHandler(this._callback.deleteClick);
-  };
-
-  removeElement = () => {
-    super.removeElement();
-
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
-    }
   };
 
   #pointTypeClickHandler = (evt) => {
@@ -73,41 +98,16 @@ export default class NewEditingFormView extends AbstractStatefulView {
     }
   };
 
-  #dateFromChangeHandler = ([userDate]) => {
+  #dateFromChangeHandler = ([newDateFrom]) => {
     this.updateElement({
-      dateFrom: userDate,
+      dateFrom: newDateFrom,
     });
   };
 
-  #dateToChangeHandler = ([userDate]) => {
+  #dateToChangeHandler = ([newDateTo]) => {
     this.updateElement({
-      dateTo: userDate,
+      dateTo: newDateTo,
     });
-  };
-
-  #setDateFromPicker = () => {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
-      {
-        enableTime: true,
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateFrom,
-        onChange: this.#dateFromChangeHandler,
-      },
-    );
-  };
-
-  #setDateToPicker = () => {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
-      {
-        enableTime: true,
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateTo,
-        minDate: this._state.dateFrom,
-        onChange: this.#dateToChangeHandler,
-      },
-    );
   };
 
   #offersToggleHandler = (evt) => {
@@ -139,7 +139,7 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(NewEditingFormView.parseStateToPoint(this._state));
+    this._callback.formSubmit(EditingFormView.parseStateToPoint(this._state));
   };
 
   setCloseClickHandler = (callback) => {
@@ -160,7 +160,7 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.deleteClick(NewEditingFormView.parseStateToPoint(this._state));
+    this._callback.deleteClick(EditingFormView.parseStateToPoint(this._state));
   };
 
   #setInnerHandlers = () => {
@@ -209,5 +209,4 @@ export default class NewEditingFormView extends AbstractStatefulView {
 
     return point;
   };
-
 }
