@@ -134,19 +134,9 @@ export default class FormOfcreationView extends AbstractStatefulView {
     });
   };
 
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  };
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(FormOfcreationView.parseStateToPoint(this._state));
-  };
-
-  setDeleteClickHandler = (callback) => {
-    this._callback.deleteClick = callback;
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
   #deleteClickHandler = (evt) => {
@@ -165,6 +155,16 @@ export default class FormOfcreationView extends AbstractStatefulView {
     }
     this.element.querySelector('.event__input--price')
       .addEventListener('input', this.#basePriceInputHandler);
+  };
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
   static parsePointToState = (point) => ({

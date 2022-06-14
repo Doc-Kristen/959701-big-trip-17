@@ -1,4 +1,4 @@
-import { humanizeHeaderDueDate } from '../../utils.js';
+import { humanizeDueDateDayMonth } from '../../utils.js';
 
 const getRouteHeader = (points) => {
 
@@ -19,7 +19,7 @@ const getTripInfoDates = (point) => {
   const startDate = point[0].dateFrom;
   const endDate = point[point.length - 1].dateTo;
 
-  return `<p class="trip-info__dates">${humanizeHeaderDueDate(startDate)}&nbsp;&mdash;&nbsp;${humanizeHeaderDueDate(endDate)}</p>`;
+  return `<p class="trip-info__dates">${humanizeDueDateDayMonth(startDate)}&nbsp;&mdash;&nbsp;${humanizeDueDateDayMonth(endDate)}</p>`;
 };
 
 const getTotalPrice = (points, allOffers) => {

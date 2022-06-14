@@ -1,5 +1,5 @@
 import he from 'he';
-import { humanizeEditingPointDueDate } from '../../utils.js';
+import { humanizeDueDateFullFormat } from '../../utils.js';
 import { PointType } from '../../const.js';
 
 const renderPointTypes = (types, checkedType) => Object.values(types).map((type) => {
@@ -102,10 +102,10 @@ const createFormTemplate = (data, allOffers, allDestinations) => {
   const destinationTemplate = createDestinationTemplate(allDestinations, checkedDestination);
 
   const dateStart = dateFrom !== null
-    ? humanizeEditingPointDueDate(dateFrom)
+    ? humanizeDueDateFullFormat(dateFrom)
     : '';
   const dateEnd = dateTo !== null
-    ? humanizeEditingPointDueDate(dateTo)
+    ? humanizeDueDateFullFormat(dateTo)
     : '';
 
   return (

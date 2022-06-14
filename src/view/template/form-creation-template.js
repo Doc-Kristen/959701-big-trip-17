@@ -1,5 +1,5 @@
 import he from 'he';
-import { humanizeEditingPointDueDate } from '../../utils.js';
+import { humanizeDueDateFullFormat } from '../../utils.js';
 import { PointType } from '../../const.js';
 
 // Форма создания точки
@@ -109,10 +109,10 @@ const createNewFormTemplate = (data, allOffers, allDestinations) => {
   const destinationTemplate = createDestinationTemplate(allDestinations, checkedDestination);
 
   const dateStart = dateFrom !== null
-    ? humanizeEditingPointDueDate(dateFrom)
+    ? humanizeDueDateFullFormat(dateFrom)
     : '';
   const dateEnd = dateTo !== null
-    ? humanizeEditingPointDueDate(dateTo)
+    ? humanizeDueDateFullFormat(dateTo)
     : '';
 
   return  (

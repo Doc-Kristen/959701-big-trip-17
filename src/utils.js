@@ -1,5 +1,5 @@
 import { FilterType } from './const';
-import { TimeInMs } from './const';
+import { TimeInMs, TimeValue } from './const';
 import dayjs from 'dayjs';
 
 const nowDate = new Date();
@@ -9,9 +9,9 @@ const nowDate = new Date();
 const getDifferenceTime = (date1, date2) => {
   let differenceTime = '';
   const difference = (new Date(date2)) - (new Date(date1));
-  const day = Math.floor(difference / (TimeInMs.SECOND * 60 * 60 * 24));
-  const hour = Math.floor((difference / TimeInMs.SECOND / 60 / 60) % 24);
-  const min = Math.floor((difference / TimeInMs.SECOND / 60) % 60);
+  const day = Math.floor(difference / (TimeInMs.SECOND * TimeValue.SECONDS_PER_MINUTE * TimeValue.MINUTES_PER_HOUR * TimeValue.HOURS_PER_DAY));
+  const hour = Math.floor((difference / TimeInMs.SECOND / TimeValue.SECONDS_PER_MINUTE / TimeValue.MINUTES_PER_HOUR) % TimeValue.HOURS_PER_DAY);
+  const min = Math.floor((difference / TimeInMs.SECOND / TimeValue.SECONDS_PER_MINUTE) % TimeValue.MINUTES_PER_HOUR);
   if (difference < TimeInMs.HOUR) {
     differenceTime = `${min}M`;
   } else if (difference >= TimeInMs.HOUR && difference < TimeInMs.DAY) {
@@ -24,19 +24,11 @@ const getDifferenceTime = (date1, date2) => {
 
 // Изменение формата даты
 
-const humanizeEditingPointDueDate = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
+const humanizeDueDateFullFormat = (dueDate) => dayjs(dueDate).format('DD/MM/YY HH:mm');
 
-const humanizeHeaderDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('D MMMM') : '';
+const humanizeDueDateDayMonth = (dueDate) => dueDate ? dayjs(dueDate).format('D MMMM') : '';
 
-const humanizeTimeEventDueDate = (dueDate) => dueDate ? dayjs(dueDate).format('HH:mm') : '';
-
-// Поиск массива оффера по подходящему типу
-
-const findSelectedOffers = (selectedTypeOffer, allOffers) => {
-  if (selectedTypeOffer === undefined) { return ''; }
-  const allOffersOfSelectedType = allOffers.find((offer) => offer.type === selectedTypeOffer).offers;
-  return allOffersOfSelectedType;
-};
+const humanizeDueDateHourMinute = (dueDate) => dueDate ? dayjs(dueDate).format('HH:mm') : '';
 
 // Сортировка
 
@@ -65,4 +57,4 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => nowDate > point.dateTo || point.dateFrom < nowDate && point.dateTo > nowDate),
 };
 
-export { filter, nowDate, getDifferenceTime, findSelectedOffers, humanizeEditingPointDueDate, humanizeHeaderDueDate, humanizeTimeEventDueDate, sortTimeDown, sortDayUp, sortPriceDown };
+export { filter, nowDate, getDifferenceTime, humanizeDueDateFullFormat, humanizeDueDateDayMonth, humanizeDueDateHourMinute, sortTimeDown, sortDayUp, sortPriceDown };

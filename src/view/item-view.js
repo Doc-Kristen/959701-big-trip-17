@@ -17,20 +17,9 @@ export default class ItemView extends AbstractView {
     return createItemTemplate(this.#point, this.#offers);
   }
 
-  setEditClickHandler = (callback) => {
-    this._callback.editClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-  };
-
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.editClick();
-  };
-
-
-  setChooseFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#chooseFavoriteClickHandler);
   };
 
   #chooseFavoriteClickHandler = (evt) => {
@@ -38,4 +27,13 @@ export default class ItemView extends AbstractView {
     this._callback.favoriteClick();
   };
 
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
+
+  setChooseFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#chooseFavoriteClickHandler);
+  };
 }

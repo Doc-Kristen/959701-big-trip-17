@@ -77,7 +77,6 @@ export default class PagePresenter {
         return filteredTasks.sort(sortPriceDown);
     }
     return filteredTasks;
-
   }
 
   get offers() {
@@ -137,7 +136,6 @@ export default class PagePresenter {
       this.#renderNoEventConponent();
 
     }
-
   };
 
   #renderTripInfo = () => {

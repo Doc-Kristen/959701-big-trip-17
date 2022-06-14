@@ -54,4 +54,10 @@ const TimeInMs = {
   SECOND: 1000,
 };
 
-export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType, ErrorTextType };
+const TimeValue = {
+  HOURS_PER_DAY: 24,
+  SECONDS_PER_MINUTE: 60,
+  MINUTES_PER_HOUR: 60,
+};
+
+export { SortType, UserAction, UpdateType, FilterType, NoPointsTextType, TimeInMs, PointType, ErrorTextType, TimeValue };

@@ -1,4 +1,10 @@
-import { getDifferenceTime, findSelectedOffers, humanizeHeaderDueDate, humanizeTimeEventDueDate } from '../../utils.js';
+import { getDifferenceTime, humanizeDueDateDayMonth, humanizeDueDateHourMinute } from '../../utils.js';
+
+const findSelectedOffers = (selectedTypeOffer, allOffers) => {
+  if (selectedTypeOffer === undefined) { return ''; }
+  const allOffersOfSelectedType = allOffers.find((offer) => offer.type === selectedTypeOffer).offers;
+  return allOffersOfSelectedType;
+};
 
 const renderSelectedOffers = (type, offersList, offers) => {
 
@@ -25,10 +31,10 @@ const createItemTemplate = (point, allOffers) => {
     type
   } = point;
   const dateStart = dateFrom !== null
-    ? humanizeTimeEventDueDate(dateFrom)
+    ? humanizeDueDateHourMinute(dateFrom)
     : '';
   const dateEnd = dateTo !== null
-    ? humanizeTimeEventDueDate(dateTo)
+    ? humanizeDueDateHourMinute(dateTo)
     : '';
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -36,7 +42,7 @@ const createItemTemplate = (point, allOffers) => {
 
   return (`<li class="trip-events__item">
 <div class="event">
-  <time class="event__date" datetime=${dateFrom}>${humanizeHeaderDueDate(dateFrom)}</time>
+  <time class="event__date" datetime=${dateFrom}>${humanizeDueDateDayMonth(dateFrom)}</time>
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
   </div>
