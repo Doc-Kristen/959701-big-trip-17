@@ -39,8 +39,6 @@ export default class PagePresenter {
 
   #pointsModel = null;
   #filterModel = null;
-  #offersModel = null;
-  #destinationsModel = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
@@ -49,13 +47,11 @@ export default class PagePresenter {
   #taskPresenter = new Map();
   #pointNewPresenter = null;
 
-  constructor(pointsModel, offersModel, destinationsModel, boardContainer, filterModel) {
+  constructor(pointsModel, boardContainer, filterModel) {
     this.#boardContainer = boardContainer;
 
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
-    this.#offersModel = offersModel;
-    this.#destinationsModel = destinationsModel;
 
     this.#pointNewPresenter = new NewPointPresenter(this.#newListView.element, this.#handleViewAction, this.#handleModeChange);
 
@@ -80,11 +76,11 @@ export default class PagePresenter {
   }
 
   get offers() {
-    return this.#offersModel.offers;
+    return this.#pointsModel.offers;
   }
 
   get destinations() {
-    return this.#destinationsModel.destinations;
+    return this.#pointsModel.destinations;
   }
 
   init = () => {
@@ -133,6 +129,7 @@ export default class PagePresenter {
       this.#renderEvents(this.points, this.offers, this.destinations);
 
     } else {
+      remove(this.#loadingComponent);
       this.#renderNoEventConponent();
 
     }
