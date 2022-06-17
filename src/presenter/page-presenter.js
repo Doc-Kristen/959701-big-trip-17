@@ -169,7 +169,8 @@ export default class PagePresenter {
       case UserAction.UPDATE_TASK:
         this.#taskPresenter.get(update.id).setSaving();
         try {
-          await this.#pointsModel.updatePoint(updateType, update);
+          await this.#pointsModel.updatePoint(updateType, update)
+            .then(() => this.#uiBlocker.unblock());
         } catch (err) {
           this.#taskPresenter.get(update.id).setAborting();
         }

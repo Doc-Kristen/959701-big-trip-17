@@ -34,8 +34,8 @@ const handleNewPointButtonClick = () => {
 filterPresenter.init();
 
 pagePresenter.init();
-pointsModel.init().then(() => {
 
+pointsModel.init().then(() => {
   render(newButtonCreateEventView, tripMainElement);
   newButtonCreateEventView.setAddEventClickHandler(handleNewPointButtonClick);
 });

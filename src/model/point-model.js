@@ -30,13 +30,12 @@ export default class PointsModel extends Observable {
       const destinations = await this.#pointsApiService.destinations;
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
-      this.#offers = offers.slice();
-      this.#destinations = destinations.slice();
+      this.#offers = offers;
+      this.#destinations = destinations;
     } catch (err) {
       this.#points = [];
       this.#offers = [];
       this.#destinations = [];
-      throw new Error('Can\'t get point. Check that the entered address is correct');
     }
 
     this._notify(UpdateType.INIT);
