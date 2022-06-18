@@ -39,6 +39,8 @@ export default class PagePresenter {
 
   #pointsModel = null;
   #filterModel = null;
+  #offersModel = null;
+  #destinationsModel = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
@@ -47,11 +49,13 @@ export default class PagePresenter {
   #taskPresenter = new Map();
   #pointNewPresenter = null;
 
-  constructor(pointsModel, boardContainer, filterModel) {
+  constructor(pointsModel, offersModel, destinationsModel, boardContainer, filterModel) {
     this.#boardContainer = boardContainer;
 
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
 
     this.#pointNewPresenter = new NewPointPresenter(this.#newListView.element, this.#handleViewAction, this.#handleModeChange);
 
@@ -76,11 +80,11 @@ export default class PagePresenter {
   }
 
   get offers() {
-    return this.#pointsModel.offers;
+    return this.#offersModel.offers;
   }
 
   get destinations() {
-    return this.#pointsModel.destinations;
+    return this.#destinationsModel.destinations;
   }
 
   init = () => {
@@ -129,7 +133,6 @@ export default class PagePresenter {
       this.#renderEvents(this.points, this.offers, this.destinations);
 
     } else {
-      remove(this.#loadingComponent);
       this.#renderNoEventConponent();
 
     }
@@ -169,8 +172,7 @@ export default class PagePresenter {
       case UserAction.UPDATE_TASK:
         this.#taskPresenter.get(update.id).setSaving();
         try {
-          await this.#pointsModel.updatePoint(updateType, update)
-            .then(() => this.#uiBlocker.unblock());
+          await this.#pointsModel.updatePoint(updateType, update);
         } catch (err) {
           this.#taskPresenter.get(update.id).setAborting();
         }
@@ -232,3 +234,4 @@ export default class PagePresenter {
     }
   };
 }
+
