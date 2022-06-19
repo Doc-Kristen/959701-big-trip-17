@@ -36,9 +36,9 @@ const FilterType = {
 };
 
 const ErrorTextType = {
-  OFFERS: 'Can\'t get offers. Check that the entered address is correct or try again later.',
+  OFFERS: 'Can\'t get offers. Please check if entered address is correct or try again later.',
   POINTS: 'Can\'t get point.',
-  DESTINATIONS: 'Can\'t get destinations. Check that the entered address is correct or try again later.',
+  DESTINATIONS: 'Can\'t get destinations. Please check if entered address is correct or try again later.',
 };
 
 const NoPointsTextType = {
