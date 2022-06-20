@@ -38,6 +38,8 @@ offersModel.init().then(() => {
       newButtonCreateEventView.element.disabled = false;
     };
 
+    pagePresenter.init();
+
     const handleNewPointButtonClick = () => {
       pagePresenter.createNewEvent(handleNewPointFormClose);
       newButtonCreateEventView.element.disabled = true;
