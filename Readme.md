@@ -7,9 +7,12 @@
 «Большое путешествие» — сервис для путешественников, который помогает детально спланировать маршрут поездки, рассчитать стоимость путешествия и получить информацию о достопримечательностях. 
 
 ---
+
 SPA на JavaScript с применением паттерна проектирования MVP.
+
 ---
 [Посмотреть демо](https://doc-kristen-big-trip-17.vercel.app/)
+
 ---
 
 <a href="https://htmlacademy.ru/intensive/ecmascript"><img align="left" width="50" height="50" title="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/ecmascript/logo-for-github.svg"></a>
