@@ -14,7 +14,7 @@ import { ErrorTextType } from './const.js';
 import { render } from './framework/render.js';
 
 const AUTHORIZATION = 'Basic bD5kbA79jl12h9f7fgfhhjgkh';
-const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/';
+const END_POINT = 'https://30.ecmascript.htmlacademy.pro/big-trip/';
 
 const pageMainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = pageMainElement.querySelector('.trip-events');
